@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islam Moçambique - Horários de Salat</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --gold-primary: #d4af37;
+            --gold-light: #f4e4bc;
+            --gold-dark: #b8941f;
+            --accent-blue: #1e40af;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Amiri', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Padrão Geométrico Islâmico no Background */
+        .islamic-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 50% 50%, var(--gold-primary) 1px, transparent 1px),
+                linear-gradient(45deg, transparent 48%, var(--gold-primary) 49%, var(--gold-primary) 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, var(--gold-primary) 49%, var(--gold-primary) 51%, transparent 52%);
+            background-size: 60px 60px, 120px 120px, 120px 120px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Decoração de Cúpula */
+        .dome-decoration {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(ellipse at center bottom, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50% 50% 0 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Container Principal */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .mosque-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 50% 50% 0 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .mosque-icon::before {
+            content: "☪";
+            font-size: 40px;
+            color: var(--primary-dark);
+        }
+
+        .mosque-icon::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 20px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .arabic-text {
+            font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+            font-size: 1.8rem;
+            color: var(--gold-primary);
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        /* Data e Hora Atual */
+        .datetime-container {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .datetime-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .current-time {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .current-date {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        .hijri-date {
+            font-family: 'Amiri', serif;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            margin-top: 5px;
+        }
+
+        /* Próxima Oração - Contador */
+        .next-prayer {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+            border: 2px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.4); }
+        }
+
+        .next-prayer-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+
+        .next-prayer-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .countdown {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            font-variant-numeric: tabular-nums;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Lista de Horários */
+        .prayer-times-container {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .prayer-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prayer-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--gold-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .prayer-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .prayer-item.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .prayer-item.active::before {
+            opacity: 1;
+        }
+
+        .prayer-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .prayer-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .prayer-details h3 {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .prayer-details .arabic-name {
+            font-family: 'Noto Naskh Arabic', serif;
+            font-size: 1rem;
+            color: var(--gold-primary);
+            opacity: 0.8;
+        }
+
+        .prayer-time {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .prayer-time .ampm {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-left: 5px;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--gold-primary);
+            color: var(--primary-dark);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer .location {
+            color: var(--gold-primary);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 1.2rem;
+            color: var(--gold-primary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-top-color: var(--gold-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .current-time { font-size: 2rem; }
+            .prayer-time { font-size: 1.4rem; }
+            .prayer-item { padding: 15px; }
+            .countdown { font-size: 1.8rem; }
+            .mosque-icon { width: 60px; height: 60px; }
+        }
+
+        /* Estrelas decorativas */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="islamic-pattern"></div>
+    <div class="dome-decoration"></div>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="mosque-icon"></div>
+            <h1>Islam Moçambique</h1>
+            <p class="subtitle">Horários de Salat</p>
+            <div class="arabic-text">الصلاة خير من النوم</div>
+        </header>
+
+        <!-- Data e Hora -->
+        <div class="datetime-container">
+            <div class="current-time" id="currentTime">--:--</div>
+            <div class="current-date" id="currentDate">Carregando...</div>
+            <div class="hijri-date" id="hijriDate">--</div>
+        </div>
+
+        <!-- Próxima Oração -->
+        <div class="next-prayer" id="nextPrayer" style="display: none;">
+            <div class="next-prayer-label">Próxima Oração</div>
+            <div class="next-prayer-name" id="nextPrayerName">--</div>
+            <div class="countdown" id="countdown">--:--:--</div>
+        </div>
+
+        <!-- Lista de Horários -->
+        <div class="prayer-times-container">
+            <h2 class="section-title">Horários de Hoje</h2>
+            <div class="prayer-list" id="prayerList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Carregando horários...
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Horários atualizados em tempo real via Firebase</p>
+            <p class="location">📍 Maputo, Moçambique</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">
+                Edite os horários no console Firebase: <code>/prayerTimes/today</code>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Configuração Firebase - SUBSTITUA COM SUAS CREDENCIAIS
+        const firebaseConfig = {
+            apiKey: "AIzaSy...",
+            authDomain: "madrassa-online-b851c.firebaseapp.com",
+            databaseURL: "https://madrassa-online-b851c-default-rtdb.firebaseio.com",
+            projectId: "madrassa-online-b851c",
+            storageBucket: "madrassa-online-b851c.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Referência aos dados de horários
+        const prayerTimesRef = database.ref('prayerTimes/today');
+
+        // Estado da aplicação
+        let prayerTimes = {};
+        let nextPrayerInterval = null;
+
+        // Nomes das orações em português e árabe
+        const prayerNames = {
+            fajr: { pt: 'Fajr', ar: 'الفجر', icon: '🌅' },
+            dhuhr: { pt: 'Dhuhr', ar: 'الظهر', icon: '☀️' },
+            asr: { pt: 'Asr', ar: 'العصر', icon: '🌤️' },
+            maghrib: { pt: 'Maghrib', ar: 'المغرب', icon: '🌇' },
+            isha: { pt: 'Isha', ar: 'العشاء', icon: '🌙' }
+        };
+
+        // Criar estrelas no background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Atualizar relógio
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-MZ', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false 
+            });
+            document.getElementById('currentTime').textContent = timeString;
+
+            const dateString = now.toLocaleDateString('pt-MZ', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('currentDate').textContent = dateString;
+
+            // Data Hijri simplificada (aproximação)
+            const hijriDate = calculateHijriDate(now);
+            document.getElementById('hijriDate').textContent = hijriDate;
+        }
+
+        // Cálculo aproximado da data Hijri
+        function calculateHijriDate(gregorianDate) {
+            // Aproximação: 1 Muharram 1446 = 7 de julho de 2024
+            const start = new Date(2024, 6, 7);
+            const diff = Math.floor((gregorianDate - start) / (1000 * 60 * 60 * 24));
+            const hijriYear = 1446 + Math.floor((diff + 354) / 354);
+            const hijriDay = ((diff % 354) + 354) % 354;
+            
+            const months = [
+                'Muharram', 'Safar', 'Rabiʻ I', 'Rabiʻ II', 
+                'Jumada I', 'Jumada II', 'Rajab', 'Shaʻban', 
+                'Ramadan', 'Shawwal', 'Dhuʻl-Qiʻdah', 'Dhuʻl-Hijjah'
+            ];
+            
+            const monthIndex = Math.floor(hijriDay / 29.5);
+            const day = Math.floor(hijriDay % 29.5) + 1;
+            
+            return `${day} ${months[monthIndex % 12]} ${hijriYear} AH`;
+        }
+
+        // Converter string de hora para objeto Date
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        }
+
+        // Formatar hora
+        function formatTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':');
+            return `${hours}:${minutes}`;
+        }
+
+        // Encontrar próxima oração
+        function updateNextPrayer() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            let nextPrayer = null;
+            let minDiff = Infinity;
+
+            Object.entries(prayerTimes).forEach(([key, time]) => {
+                if (!time) return;
+                const [h, m] = time.split(':').map(Number);
+                const prayerMinutes = h * 60 + m;
+                let diff = prayerMinutes - currentMinutes;
+                
+                if (diff < 0) diff += 24 * 60; // Próximo dia
+                
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    nextPrayer = { key, time, diff };
+                }
+            });
+
+            if (nextPrayer) {
+                document.getElementById('nextPrayer').style.display = 'block';
+                document.getElementById('nextPrayerName').textContent = 
+                    `${prayerNames[nextPrayer.key].pt} (${prayerNames[nextPrayer.key].ar})`;
+                
+                // Atualizar contador regressivo
+                updateCountdown(nextPrayer.diff);
+                
+                // Destacar oração ativa na lista
+                document.querySelectorAll('.prayer-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.dataset.prayer === nextPrayer.key) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Atualizar contador regressivo
+        function updateCountdown(minutesDiff) {
+            const hours = Math.floor(minutesDiff / 60);
+            const minutes = minutesDiff % 60;
+            const seconds = 59 - new Date().getSeconds();
+            
+            const timeStr = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('countdown').textContent = timeStr;
+        }
+
+        // Renderizar lista de orações
+        function renderPrayerTimes(data) {
+            const container = document.getElementById('prayerList');
+            container.innerHTML = '';
+
+            const order = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
+            
+            order.forEach(key => {
+                if (!data[key]) return;
+                
+                const prayer = prayerNames[key];
+                const time = data[key];
+                
+                const div = document.createElement('div');
+                div.className = 'prayer-item';
+                div.dataset.prayer = key;
+                
+                div.innerHTML = `
+                    <div class="prayer-info">
+                        <div class="prayer-icon">${prayer.icon}</div>
+                        <div class="prayer-details">
+                            <h3>${prayer.pt}</h3>
+                            <div class="arabic-name">${prayer.ar}</div>
+                        </div>
+                    </div>
+                    <div class="prayer-time">
+                        ${formatTime(time)}
+                        <span class="ampm">${parseInt(time.split(':')[0]) >= 12 ? 'PM' : 'AM'}</span>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+
+            prayerTimes = data;
+            updateNextPrayer();
+        }
+
+        // Listener do Firebase
+        prayerTimesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                renderPrayerTimes(data);
+            } else {
+                // Dados padrão caso não existam no Firebase
+                const defaultTimes = {
+                    fajr: '04:40',
+                    dhuhr: '11:56',
+                    asr: '15:19',
+                    maghrib: '17:55',
+                    isha: '19:07'
+                };
+                renderPrayerTimes(defaultTimes);
+                
+                // Opcional: salvar defaults no Firebase
+                prayerTimesRef.set(defaultTimes);
+            }
+        }, (error) => {
+            console.error('Erro ao carregar horários:', error);
+            document.getElementById('prayerList').innerHTML = 
+                '<div style="text-align: center; color: #ef4444;">Erro ao carregar horários. Verifique a conexão.</div>';
+        });
+
+        // Inicialização
+        createStars();
+        updateClock();
+        setInterval(updateClock, 1000);
+        setInterval(updateNextPrayer, 60000); // Atualizar próxima oração a cada minuto
+        setInterval(() => {
+            if (Object.keys(prayerTimes).length > 0) updateNextPrayer();
+        }, 1000); // Atualizar contador a cada segundo
+
+        // Cálculo preciso da data Hijri usando fórmula astronômica
+        function getHijriDate(date) {
+            // Fórmula de conversão aproximada
+            const jd = Math.floor((date.getTime() / 86400000) + 2440587.5);
+            const l = jd - 1948440 + 10632;
+            const n = Math.floor((l - 1) / 10631);
+            const j = l - 10631 * n + 354;
+            const j1 = (Math.floor((10985 - j) / 5316)) * (Math.floor((50 * j) / 17719)) + (Math.floor(j / 5670)) * (Math.floor((43 * j) / 15238));
+            const j2 = j1 - (Math.floor((30 - j1) / 15)) * (Math.floor((17719 * j1) / 50)) - (Math.floor(j1 / 16)) * (Math.floor((15238 * j1) / 43)) + 29;
+            const m = Math.floor((24 * j2) / 709);
+            const d = j2 - Math.floor((709 * m) / 24);
+            const y = 30 * n + j - 30;
+            
+            const months = [
+                'Muharram', 'Safar', 'Rabiʻ al-Awwal', 'Rabiʻ al-Thani',
+                'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', 'Shaʻban',
+                'Ramadan', 'Shawwal', 'Dhuʻl-Qiʻdah', 'Dhuʻl-Hijjah'
+            ];
+            
+            return `${d} ${months[m - 1]} ${y} AH`;
+        }
+
+        // Atualizar com cálculo mais preciso
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('hijriDate').textContent = getHijriDate(now);
+        }, 1000 * 60 * 60); // Atualizar a cada hora
+    </script>
+</body>
+</html>

@@ -368,15 +368,27 @@
             margin-top: 1rem;
             cursor: pointer;
             transition: all 0.3s;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
         }
 
         .audio-player:hover {
             transform: scale(1.05);
         }
 
+        .audio-player.playing {
+            background: var(--gold);
+            color: var(--primary-dark);
+        }
+
         .audio-player i {
             font-size: 1.5rem;
             color: var(--gold);
+        }
+
+        .audio-player.playing i {
+            color: var(--primary-dark);
         }
 
         /* Steps Section */
@@ -553,7 +565,7 @@
             margin-bottom: 0.5rem;
         }
 
-        .modal-body ul {
+        .modal-body ul, .modal-body ol {
             padding-left: 1.5rem;
         }
 
@@ -676,6 +688,28 @@
         .checklist i {
             color: var(--text-light);
         }
+
+        /* Audio List */
+        .audio-list {
+            margin: 1rem 0;
+        }
+
+        .audio-item {
+            background: var(--cream);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .audio-item h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .custom-audio {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -699,7 +733,7 @@
         <div class="nav-header">
             <i class="fas fa-mosque"></i>
             <h3>Islam Moçambique</h3>
-            <p>Guia de Conversão ao Islã</p>
+            <p>Guia de Conversão ao Islam</p>
         </div>
         <div class="nav-links">
             <a href="#inicio" class="nav-link active" onclick="showSection('inicio')">
@@ -744,7 +778,7 @@
         <section id="inicio" class="hero fade-in">
             <div class="hero-content">
                 <h2>Bem-vindo ao Islam</h2>
-                <p>Seu guia completo para conhecer e abraçar o Islã. Um caminho de paz, propósito e conexão com Deus (Allah).</p>
+                <p>Seu guia completo para conhecer e abraçar o Islam. Um caminho de paz, propósito e conexão com Allah (Deus).</p>
                 <button class="btn-primary" onclick="scrollToSection('shahada')">
                     <i class="fas fa-play-circle"></i>
                     Começar Jornada
@@ -767,7 +801,7 @@
         <!-- Quick Access Cards -->
         <h2 class="section-title">
             <i class="fas fa-compass"></i>
-            Explore o Islã
+            Explore o Islam
         </h2>
         <div class="cards-grid">
             <div class="card" onclick="openModal('shahada-modal')">
@@ -807,7 +841,7 @@
                     <i class="fas fa-book-open"></i>
                 </div>
                 <h3>Alcorão</h3>
-                <p>Introdução ao livro sagrado do Islã, como ler e seus ensinamentos fundamentais.</p>
+                <p>Introdução ao livro sagrado do Islam, como ler e seus ensinamentos fundamentais.</p>
             </div>
 
             <div class="card" onclick="openModal('comunidade-modal')">
@@ -839,13 +873,15 @@
                 "Eu testemunho que não há divindade digna de adoração exceto Allah, e eu testemunho que Muhammad é o Mensageiro de Allah."
             </div>
 
-            <div class="audio-player" onclick="playAudio('shahada')">
+            <button class="audio-player" onclick="playAudio('shahada', this)">
                 <i class="fas fa-play"></i>
                 <span>Ouvir Pronúncia</span>
-            </div>
+            </button>
             
-            <audio id="shahada-audio" style="display: none;">
-                <source src="https://www.islamicfinder.org/wp-content/uploads/2018/09/001-shahada.mp3" type="audio/mpeg">
+            <audio id="shahada-audio" preload="none">
+                <source src="https://upload.wikimedia.org/wikipedia/commons/3/37/Islamic_shahada.wav" type="audio/wav">
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                Seu navegador não suporta áudio.
             </audio>
 
             <div style="margin-top: 2rem; padding: 1.5rem; background: var(--cream); border-radius: 15px; text-align: left;">
@@ -876,8 +912,8 @@
             <div class="step">
                 <div class="step-number">1</div>
                 <div class="step-content">
-                    <h4>Conheça o Islã</h4>
-                    <p>Estude os princípios básicos do Islã, sua história e os ensinamentos do Profeta Muhammad (paz e bênçãos estejam com ele). Leia o Alcorão e conheça a vida dos profetas.</p>
+                    <h4>Conheça o Islam</h4>
+                    <p>Estude os princípios básicos do Islam, sua história e os ensinamentos do Profeta Muhammad (paz e bênçãos estejam com ele). Leia o Alcorão e conheça a vida dos profetas.</p>
                 </div>
             </div>
 
@@ -893,7 +929,7 @@
                 <div class="step-number">3</div>
                 <div class="step-content">
                     <h4>Pratique a Shahada</h4>
-                    <p>Aprenda a declaração de fé em árabe e seu significado. Quando estiver pronto, pronuncie-a com sinceridade e convicção. Esta é a chave para o Islã.</p>
+                    <p>Aprenda a declaração de fé em árabe e seu significado. Quando estiver pronto, pronuncie-a com sinceridade e convicção. Esta é a chave para o Islam.</p>
                 </div>
             </div>
 
@@ -917,7 +953,7 @@
                 <div class="step-number">6</div>
                 <div class="step-content">
                     <h4>Busque Conhecimento Contínuo</h4>
-                    <p>O aprendizado no Islã é contínuo. Estude o Alcorão, a Sunnah e busque uma comunidade islâmica para apoio e crescimento espiritual.</p>
+                    <p>O aprendizado no Islam é contínuo. Estude o Alcorão, a Sunnah e busque uma comunidade islâmica para apoio e crescimento espiritual.</p>
                 </div>
             </div>
         </section>
@@ -930,7 +966,7 @@
             <ul class="checklist" id="checklist">
                 <li onclick="toggleCheck(this)">
                     <i class="far fa-circle"></i>
-                    <span>Estudei os princípios básicos do Islã</span>
+                    <span>Estudei os princípios básicos do Islam</span>
                 </li>
                 <li onclick="toggleCheck(this)">
                     <i class="far fa-circle"></i>
@@ -967,7 +1003,7 @@
         <section id="pilares" class="steps-container">
             <h2 class="section-title">
                 <i class="fas fa-star-and-crescent"></i>
-                Os 5 Pilares do Islã
+                Os 5 Pilares do Islam
             </h2>
 
             <div class="cards-grid" style="grid-template-columns: 1fr;">
@@ -1074,20 +1110,20 @@
             <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                 <div class="card" style="text-align: center;">
                     <i class="fas fa-phone" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                    <h4>Telefone</h4>
-                    <p>+258 84 123 4567</p>
+                    <h4>Telefone/WhatsApp</h4>
+                    <p>+258 86 040 7269</p>
                 </div>
                 
                 <div class="card" style="text-align: center;">
                     <i class="fas fa-envelope" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
                     <h4>Email</h4>
-                    <p>contato@islammocambique.org</p>
+                    <p>Islammocambique@gmail.com</p>
                 </div>
                 
                 <div class="card" style="text-align: center;">
-                    <i class="fab fa-whatsapp" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                    <h4>WhatsApp</h4>
-                    <p>+258 86 987 6543</p>
+                    <i class="fas fa-map-marker-alt" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h4>Localização</h4>
+                    <p>Moçambique</p>
                 </div>
             </div>
         </section>
@@ -1097,7 +1133,8 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-logo">☪</div>
-        <p>Islam Moçambique - Guia de Conversão ao Islã</p>
+        <p>Islam Moçambique - Guia de Conversão ao Islam</p>
+        <p>Contato: 86 040 7269 | Islammocambique@gmail.com</p>
         <p>Feito com <i class="fas fa-heart heart"></i> para todos que buscam a verdade</p>
         <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.6;">
             &copy; 2026 Islam Moçambique. Todos os direitos reservados.
@@ -1121,7 +1158,7 @@
                 </div>
                 
                 <h3>Significado Completo:</h3>
-                <p>A Shahada é o fundamento do Islã. Ao pronunciá-la com sinceridade e convicção, uma pessoa entra oficialmente na fé islâmica.</p>
+                <p>A Shahada é o fundamento do Islam. Ao pronunciá-la com sinceridade e convicção, uma pessoa entra oficialmente na fé islâmica.</p>
                 
                 <h3>Condições da Shahada:</h3>
                 <ul>
@@ -1134,10 +1171,16 @@
                 </ul>
 
                 <h3>Áudio para Prática:</h3>
-                <audio controls>
-                    <source src="https://www.islamicfinder.org/wp-content/uploads/2018/09/001-shahada.mp3" type="audio/mpeg">
+                <audio controls class="custom-audio" preload="none">
+                    <source src="https://upload.wikimedia.org/wikipedia/commons/3/37/Islamic_shahada.wav" type="audio/wav">
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
                     Seu navegador não suporta áudio.
                 </audio>
+                
+                <button class="audio-player" onclick="playAudio('shahada', this)" style="margin-top: 1rem;">
+                    <i class="fas fa-play"></i>
+                    <span>Tocar Shahada</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1168,10 +1211,11 @@
                     <li><strong>Lavar os pés:</strong> Até os tornozelos, 3 vezes</li>
                 </ol>
 
-                <div class="audio-player" style="margin-top: 1rem;">
-                    <i class="fas fa-play"></i>
-                    <span>Ouver Guia de Wudu</span>
-                </div>
+                <h3>Áudio de Referência:</h3>
+                <audio controls class="custom-audio" preload="none">
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+                    Seu navegador não suporta áudio.
+                </audio>
             </div>
         </div>
     </div>
@@ -1216,6 +1260,12 @@
                     اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ<br>
                     صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ
                 </div>
+                
+                <h3>Áudio Al-Fatiha:</h3>
+                <audio controls class="custom-audio" preload="none">
+                    <source src="https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/001.mp3" type="audio/mpeg">
+                    Seu navegador não suporta áudio.
+                </audio>
             </div>
         </div>
     </div>
@@ -1230,40 +1280,49 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h3>Ao acordar:</h3>
-                <div style="background: var(--cream); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
-                    <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
-                        الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ
-                    </p>
-                    <p><em>"Alhamdu lillahi alladhi ahyana ba'da ma amatana wa ilayhin-nushur"</em></p>
-                    <p>"Louvado seja Allah que nos deu a vida após nos ter dado a morte, e a Ele é o retorno."</p>
+                <div class="audio-item">
+                    <h4>Ao acordar:</h4>
+                    <div style="background: var(--cream); padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                        <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
+                            الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ
+                        </p>
+                        <p><em>"Alhamdu lillahi alladhi ahyana ba'da ma amatana wa ilayhin-nushur"</em></p>
+                        <p>"Louvado seja Allah que nos deu a vida após nos ter dado a morte, e a Ele é o retorno."</p>
+                    </div>
+                    <audio controls class="custom-audio" preload="none">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+                        Seu navegador não suporta áudio.
+                    </audio>
                 </div>
 
-                <h3>Antes de comer:</h3>
-                <div style="background: var(--cream); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
-                    <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
-                        بِسْمِ اللَّهِ
-                    </p>
-                    <p><em>"Bismillah"</em></p>
-                    <p>"Em nome de Allah."</p>
+                <div class="audio-item">
+                    <h4>Antes de comer:</h4>
+                    <div style="background: var(--cream); padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                        <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
+                            بِسْمِ اللَّهِ
+                        </p>
+                        <p><em>"Bismillah"</em></p>
+                        <p>"Em nome de Allah."</p>
+                    </div>
+                    <audio controls class="custom-audio" preload="none">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
+                        Seu navegador não suporta áudio.
+                    </audio>
                 </div>
 
-                <h3>Após comer:</h3>
-                <div style="background: var(--cream); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
-                    <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
-                        الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ
-                    </p>
-                    <p><em>"Alhamdu lillahi alladhi at'amani hadha wa razaqanihi min ghayri hawlin minni wa la quwwah"</em></p>
-                    <p>"Louvado seja Allah que me alimentou com isto e me proporcionou isso sem força nem poder de minha parte."</p>
-                </div>
-
-                <h3>Ao entrar em casa:</h3>
-                <div style="background: var(--cream); padding: 1rem; border-radius: 10px;">
-                    <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
-                        بِسْمِ اللَّهِ وَلَجْنَا وَبِسْمِ اللَّهِ خَرَجْنَا وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا
-                    </p>
-                    <p><em>"Bismillahi walajna wa bismillahi kharajna wa 'alallahi rabbina tawakkalna"</em></p>
-                    <p>"Em nome de Allah entramos, em nome de Allah saímos, e em Allah, nosso Senhor, confiamos."</p>
+                <div class="audio-item">
+                    <h4>Após comer:</h4>
+                    <div style="background: var(--cream); padding: 1rem; border-radius: 10px; margin-bottom: 0.5rem;">
+                        <p style="font-family: 'Amiri', serif; text-align: right; font-size: 1.2rem;">
+                            الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ
+                        </p>
+                        <p><em>"Alhamdu lillahi alladhi at'amani hadha wa razaqanihi min ghayri hawlin minni wa la quwwah"</em></p>
+                        <p>"Louvado seja Allah que me alimentou com isto e me proporcionou isso sem força nem poder de minha parte."</p>
+                    </div>
+                    <audio controls class="custom-audio" preload="none">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" type="audio/mpeg">
+                        Seu navegador não suporta áudio.
+                    </audio>
                 </div>
             </div>
         </div>
@@ -1279,7 +1338,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>O Alcorão (Qur'an) é o livro sagrado do Islã, revelado pelo Anjo Gabriel ao Profeta Muhammad (paz e bênçãos estejam com ele) ao longo de 23 anos. É a palavra literal de Allah (Deus).</p>
+                <p>O Alcorão (Qur'an) é o livro sagrado do Islam, revelado pelo Anjo Gabriel ao Profeta Muhammad (paz e bênçãos estejam com ele) ao longo de 23 anos. É a palavra literal de Allah (Deus).</p>
                 
                 <h3>Estrutura:</h3>
                 <ul>
@@ -1296,6 +1355,12 @@
                     <li><strong>An-Nas (A Humanidade):</strong> Proteção contra as tentações</li>
                     <li><strong>Al-Kafirun (Os Incrédulos):</strong> Sobre a liberdade religiosa</li>
                 </ol>
+
+                <h3>Áudio Al-Fatiha Completa:</h3>
+                <audio controls class="custom-audio" preload="none">
+                    <source src="https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/001.mp3" type="audio/mpeg">
+                    Seu navegador não suporta áudio.
+                </audio>
 
                 <h3>Como começar a ler:</h3>
                 <p>Recomenda-se começar por traduções em português enquanto aprende árabe. Leia com atenção, reflexão e busque entender o contexto das revelações.</p>
@@ -1315,6 +1380,12 @@
             <div class="modal-body">
                 <p>Moçambique tem uma comunidade islâmica vibrante e acolhedora. Encontrar irmãos e irmãs de fé é essencial para o crescimento espiritual.</p>
                 
+                <h3>Contacto Principal:</h3>
+                <div style="background: var(--cream); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; border-right: 4px solid var(--gold);">
+                    <p><i class="fas fa-phone" style="color: var(--primary); margin-left: 10px;"></i> <strong>WhatsApp:</strong> +258 86 040 7269</p>
+                    <p style="margin-top: 0.5rem;"><i class="fas fa-envelope" style="color: var(--primary); margin-left: 10px;"></i> <strong>Email:</strong> Islammocambique@gmail.com</p>
+                </div>
+
                 <h3>Mesquitas Principais:</h3>
                 <ul>
                     <li><strong>Mesquita Central de Maputo:</strong> Baixa de Maputo</li>
@@ -1333,7 +1404,7 @@
                 <h3>Dicas para Novos Muçulmanos:</h3>
                 <ul>
                     <li>Visite a mesquita mais próxima na hora da oração</li>
-                    <li>Apresente-se ao imame e explique que é novo no Islã</li>
+                    <li>Apresente-se ao imame e explique que é novo no Islam</li>
                     <li>Participe de aulas de estudo (Halqa)</li>
                     <li>Peça um mentor (pessoa experiente) para guiá-lo</li>
                     <li>Participe de eventos comunitários</li>
@@ -1367,9 +1438,12 @@
                         <p><em>"Ash-hadu anla ilaha illallah"</em></p>
                         <p>"Eu testemunho que não há divindade exceto Allah"</p>
                     </div>
-                    <button class="btn-primary" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="playAudio('part1')">
-                        <i class="fas fa-play"></i> Ouvir
+                    <button class="btn-primary" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="playAudio('part1', this)">
+                        <i class="fas fa-play"></i> Ouvir Parte 1
                     </button>
+                    <audio id="part1-audio" preload="none" style="display: none;">
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/3/37/Islamic_shahada.wav" type="audio/wav">
+                    </audio>
                 </div>
 
                 <div style="margin-bottom: 1.5rem;">
@@ -1381,9 +1455,12 @@
                         <p><em>"Wa ash-hadu anna Muhammadar Rasulullah"</em></p>
                         <p>"E eu testemunho que Muhammad é o Mensageiro de Allah"</p>
                     </div>
-                    <button class="btn-primary" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="playAudio('part2')">
-                        <i class="fas fa-play"></i> Ouvir
+                    <button class="btn-primary" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="playAudio('part2', this)">
+                        <i class="fas fa-play"></i> Ouvir Parte 2
                     </button>
+                    <audio id="part2-audio" preload="none" style="display: none;">
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/3/37/Islamic_shahada.wav" type="audio/wav">
+                    </audio>
                 </div>
 
                 <div style="background: var(--gold-light); padding: 1rem; border-radius: 10px; border-right: 4px solid var(--gold);">
@@ -1422,21 +1499,55 @@
             });
         });
 
-        // Audio Player
-        function playAudio(type) {
-            if (type === 'shahada') {
-                const audio = document.getElementById('shahada-audio');
-                if (audio.paused) {
-                    audio.play();
-                    event.target.innerHTML = '<i class="fas fa-pause"></i><span>Pausar</span>';
-                } else {
-                    audio.pause();
-                    event.target.innerHTML = '<i class="fas fa-play"></i><span>Ouvir Pronúncia</span>';
+        // Audio Player - CORRIGIDO
+        const audioStates = {};
+
+        function playAudio(audioId, button) {
+            const audio = document.getElementById(audioId + '-audio');
+            const icon = button.querySelector('i');
+            const text = button.querySelector('span');
+            
+            // Pausar todos os outros áudios
+            document.querySelectorAll('audio').forEach(a => {
+                if (a !== audio) {
+                    a.pause();
+                    a.currentTime = 0;
                 }
+            });
+            
+            // Resetar todos os botões
+            document.querySelectorAll('.audio-player').forEach(btn => {
+                if (btn !== button) {
+                    btn.classList.remove('playing');
+                    const btnIcon = btn.querySelector('i');
+                    const btnText = btn.querySelector('span');
+                    if (btnIcon) btnIcon.className = 'fas fa-play';
+                    if (btnText) btnText.textContent = btnText.textContent.replace('Pausar', 'Ouvir').replace('Tocando...', 'Ouvir');
+                }
+            });
+
+            if (audio.paused) {
+                audio.play().then(() => {
+                    button.classList.add('playing');
+                    icon.className = 'fas fa-pause';
+                    text.textContent = text.textContent.replace('Ouvir', 'Pausar').replace('Tocar', 'Pausar');
+                }).catch(error => {
+                    console.error('Erro ao tocar áudio:', error);
+                    alert('Não foi possível carregar o áudio. Verifique sua conexão.');
+                });
             } else {
-                // Simulação para outras partes
-                alert('Reproduzindo áudio de prática... (Em uma versão completa, aqui tocaria o áudio específico)');
+                audio.pause();
+                button.classList.remove('playing');
+                icon.className = 'fas fa-play';
+                text.textContent = text.textContent.replace('Pausar', 'Ouvir').replace('Pausar', 'Tocar');
             }
+
+            // Quando o áudio terminar
+            audio.onended = function() {
+                button.classList.remove('playing');
+                icon.className = 'fas fa-play';
+                text.textContent = text.textContent.replace('Pausar', 'Ouvir').replace('Pausar', 'Tocar');
+            };
         }
 
         // Checklist Toggle
@@ -1471,18 +1582,25 @@
         // Show Section (for nav)
         function showSection(sectionId) {
             toggleMenu();
-            scrollToSection(sectionId);
+            setTimeout(() => {
+                scrollToSection(sectionId);
+            }, 300);
             
             // Update active nav
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + sectionId) {
+                    link.classList.add('active');
+                }
             });
-            event.target.closest('.nav-link').classList.add('active');
         }
 
         // Set current date
         const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-PT', dateOptions);
+        const currentDateElement = document.getElementById('currentDate');
+        if (currentDateElement) {
+            currentDateElement.textContent = new Date().toLocaleDateString('pt-PT', dateOptions);
+        }
 
         // Add fade-in animation on scroll
         const observerOptions = {
@@ -1500,6 +1618,15 @@
 
         document.querySelectorAll('.card, .step').forEach(el => {
             observer.observe(el);
+        });
+
+        // Fechar menu ao clicar em link (mobile)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleMenu();
+                }
+            });
         });
     </script>
 

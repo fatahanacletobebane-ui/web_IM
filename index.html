@@ -1,160 +1,172 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Islam Moçambique</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islam Moçambique - Aulas de Madrassa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #006633; /* Verde Islâmico */
+            --secondary-color: #d4af37; /* Dourado */
+            --light-bg: #f4f7f6;
+            --dark-text: #333;
+        }
 
-  <style>
-    body { font-family: Arial; margin:0; background:#f4f6f8; }
-    header { background:#0a7c4a; color:white; padding:20px; text-align:center; }
-    nav { background:#064e2f; padding:10px; text-align:center; }
-    nav a { color:white; margin:10px; text-decoration:none; font-weight:bold; }
-    .container { padding:20px; }
-    .card { background:white; padding:20px; margin-bottom:20px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-    h2 { color:#0a7c4a; }
-    input, button { padding:10px; margin:5px 0; width:100%; }
-    button { background:#0a7c4a; color:white; border:none; cursor:pointer; }
-    footer { background:#0a7c4a; color:white; text-align:center; padding:15px; }
-  </style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
 
-    const firebaseConfig = {
-  apiKey: "AIzaSyD2rNS7HSJyek3OCrRquudFgqQSWXZJYrY",
-  authDomain: "madrassa-online-b851c.firebaseapp.com",
-  databaseURL: "https://madrassa-online-b851c-default-rtdb.firebaseio.com",
-  projectId: "madrassa-online-b851c",
-  storageBucket: "madrassa-online-b851c.appspot.com",
-  messagingSenderId: "360782668012",
-  appId: "1:360782668012:web:d501ef187911db632445c9"
-};
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
 
-    // INSCRIÇÃO
-    window.salvarUsuario = function(e) {
-      e.preventDefault();
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
 
-      const nome = document.getElementById('nome').value;
-      const numero = document.getElementById('numero').value;
+        .intro-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
 
-      push(ref(db, 'usuarios'), {
-        nome: nome,
-        numero: numero,
-        data: new Date().toLocaleString()
-      });
+        .lesson-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
 
-      // WhatsApp automático
-      const mensagem = `Assalamu Alaikum, acabei de me inscrever. Nome: ${nome}`;
-      window.open(`https://wa.me/258860407269?text=${encodeURIComponent(mensagem)}`);
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
 
-      document.getElementById('msg').innerText = "Inscrição feita com sucesso!";
-      document.querySelector('form').reset();
-    }
+        .lesson-header i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
 
-    // LOGIN ALUNO
-    window.loginAluno = function() {
-      localStorage.setItem("logado", "sim");
-      document.getElementById("materias").style.display = "block";
-      alert("Login feito!");
-    }
+        /* Contentor para o PDF */
+        .pdf-viewer {
+            width: 100%;
+            height: 800px; /* Altura ideal para leitura */
+            border: 2px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-    // ADMIN
-    window.loginAdmin = function() {
-      const senha = document.getElementById("senhaAdmin").value;
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
-      if (senha === "12345") {
-        carregarUsuarios();
-      } else {
-        alert("Senha incorreta");
-      }
-    }
+        /* Botão WhatsApp Flutuante */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
 
-    function carregarUsuarios() {
-      const lista = document.getElementById("lista");
-      const usuariosRef = ref(db, 'usuarios');
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            color: white;
+        }
 
-      onValue(usuariosRef, (snapshot) => {
-        lista.innerHTML = "";
-        snapshot.forEach((child) => {
-          const u = child.val();
-          let li = document.createElement("li");
-          li.textContent = u.nome + " - " + u.numero + " (" + u.data + ")";
-          lista.appendChild(li);
-        });
-      });
-    }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
 
-    // BLOQUEAR CONTEÚDO
-    window.onload = function() {
-      if (localStorage.getItem("logado") !== "sim") {
-        document.getElementById("materias").style.display = "none";
-      }
-    }
-  </script>
+        @media (max-width: 600px) {
+            .pdf-viewer {
+                height: 500px;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-  <h1>Islam Moçambique</h1>
-  <p>Assistência: 860407269</p>
-</header>
+    <header>
+        <h1>Islam Moçambique</h1>
+        <p>Centro de Aprendizagem e Ensino Alcorânico</p>
+    </header>
 
-<nav>
-  <a href="#">Matérias</a>
-  <a href="#">Inscrição</a>
-  <a href="#">Login</a>
-  <a href="#">Admin</a>
-</nav>
+    <div class="container">
+        <div class="intro-card">
+            <h2>Bem-vindo à sua Madrassa Digital</h2>
+            <p>Abaixo, poderá acompanhar as lições do <strong>Yassarnal Qur'aan (Parte 1)</strong> de forma organizada e simples.</p>
+        </div>
 
-<div class="container">
+        <section class="lesson-section">
+            <div class="lesson-header">
+                <i class="fas fa-book-open"></i>
+                <h3>Manual de Aula: Yassarnal Qur'aan</h3>
+            </div>
+            
+            <div class="pdf-viewer">
+                <iframe src="Yassarna 1ª Parte.pdf#toolbar=0" type="application/pdf">
+                    <p>O seu navegador não suporta a visualização de PDFs. 
+                    <a href="Yassarna 1ª Parte.pdf">Clique aqui para descarregar o PDF.</a></p>
+                </iframe>
+            </div>
+        </section>
+    </div>
 
-  <!-- MATÉRIAS -->
-  <div id="materias" class="card">
-    <h2>Aulas Yassarna</h2>
-    <p>Aula 1 - Letras árabes</p>
-    <p>Aula 2 - Pronúncia</p>
-    <p>Aula 3 - Harakat</p>
-    <p>Aula 4 - Junção</p>
-    <p>Aula 5 - Leitura</p>
-  </div>
+    <a href="https://wa.me/258860407269?text=Assalamu+Alaikum%2C+gostaria+de+saber+mais+sobre+as+aulas+da+Madrassa" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
-  <!-- INSCRIÇÃO -->
-  <div class="card">
-    <h2>Inscrição</h2>
-    <form onsubmit="salvarUsuario(event)">
-      <input type="text" id="nome" placeholder="Nome" required>
-      <input type="tel" id="numero" placeholder="Número" required>
-      <button type="submit">Inscrever</button>
-    </form>
-    <p id="msg"></p>
-  </div>
-
-  <!-- LOGIN -->
-  <div class="card">
-    <h2>Login Aluno</h2>
-    <button onclick="loginAluno()">Entrar</button>
-  </div>
-
-  <!-- ADMIN -->
-  <div class="card">
-    <h2>Admin</h2>
-    <input type="password" id="senhaAdmin" placeholder="Senha">
-    <button onclick="loginAdmin()">Entrar</button>
-    <ul id="lista"></ul>
-  </div>
-
-</div>
-
-<footer>
-  <p>© 2026 Islam Moçambique</p>
-</footer>
+    <footer>
+        <p>&copy; 2026 Islam Moçambique. Todos os direitos reservados.</p>
+    </footer>
 
 </body>
 </html>

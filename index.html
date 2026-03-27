@@ -2,170 +2,1268 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Islam Moçambique</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00c853">
+<meta name="theme-color" content="#0f3460">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-body{font-family:Arial;background:linear-gradient(to right,#0f2027,#203a43,#2c5364);color:white;text-align:center;margin:0;padding:0;}
-input{width:85%;padding:10px;border-radius:8px;border:none;margin:5px;}
-button{width:90%;padding:12px;margin:6px;border:none;border-radius:10px;background:#00c853;color:white;}
-.card{background:rgba(255,255,255,0.1);padding:15px;margin:10px;border-radius:15px;}
-.hidden{display:none;}
-iframe{width:95%;height:80vh;border:none;border-radius:10px;margin:10px;}
-img,video{max-width:90%;border-radius:10px;}
+:root {
+    --primary: #00c853;
+    --primary-dark: #00a344;
+    --secondary: #00d4aa;
+    --accent: #ffd700;
+    --bg-dark: #0a0e27;
+    --bg-card: rgba(255, 255, 255, 0.08);
+    --bg-card-hover: rgba(255, 255, 255, 0.12);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --glass: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.18);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f4b 50%, #0f3460 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0,200,83,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0,212,170,0.15) 0%, transparent 40%),
+                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.08) 0%, transparent 40%);
+    animation: bgFloat 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes bgFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+}
+
+/* Container */
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 30px 0;
+    position: relative;
+}
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+}
+
+.moon-icon {
+    font-size: 60px;
+    color: var(--accent);
+    animation: moonGlow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+}
+
+@keyframes moonGlow {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 40px rgba(255,215,0,0.8)); }
+}
+
+.app-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+/* Cards */
+.card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 25px;
+    margin: 15px 0;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    background: var(--bg-card-hover);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Input Fields */
+.input-group {
+    position: relative;
+    margin: 20px 0;
+}
+
+.input-group i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 18px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 18px 20px 18px 55px;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.input-field:focus {
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 20px rgba(0, 200, 83, 0.2);
+}
+
+.input-field::placeholder {
+    color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 18px 30px;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 200, 83, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 200, 83, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+    color: #1a1a1a;
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+}
+
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+}
+
+/* User Stats */
+.stats-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.badge-pro {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+    color: #1a1a1a;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+}
+
+/* Menu Grid */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.menu-item {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 25px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.menu-item:hover::before {
+    left: 100%;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    background: var(--bg-card-hover);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.menu-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.menu-item:nth-child(1) .menu-icon { color: #4CAF50; }
+.menu-item:nth-child(2) .menu-icon { color: #2196F3; }
+.menu-item:nth-child(3) .menu-icon { color: #FF9800; }
+.menu-item:nth-child(4) .menu-icon { color: #9C27B0; }
+.menu-item:nth-child(5) .menu-icon { color: #00BCD4; }
+.menu-item:nth-child(6) .menu-icon { color: #E91E63; }
+.menu-item:nth-child(7) .menu-icon { color: #3F51B5; }
+.menu-item:nth-child(8) .menu-icon { color: #009688; }
+
+.menu-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.menu-sublabel {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+}
+
+/* Action Buttons Row */
+.action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.action-row .btn {
+    flex: 1;
+    margin: 0;
+}
+
+/* Iframe Container */
+.iframe-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-dark);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.iframe-header {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.btn-back {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.iframe-title {
+    flex: 1;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.iframe-content {
+    flex: 1;
+    border: none;
+    width: 100%;
+}
+
+/* Tasks Section */
+.task-card {
+    background: linear-gradient(135deg, rgba(0,200,83,0.1) 0%, rgba(0,212,170,0.1) 100%);
+    border: 1px solid rgba(0,200,83,0.3);
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.task-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.task-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.task-icon.share { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+.task-icon.ads { background: rgba(255, 152, 0, 0.2); color: #FF9800; }
+.task-icon.pro { background: rgba(255, 215, 0, 0.2); color: #ffd700; }
+
+.task-text h4 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.task-text p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.task-reward {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Ads Viewer */
+.ads-viewer {
+    text-align: center;
+    padding: 30px;
+}
+
+.ads-media {
+    width: 100%;
+    max-width: 350px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin: 20px auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.timer-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) var(--progress, 0%), transparent 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    position: relative;
+}
+
+.timer-circle::before {
+    content: '';
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    background: var(--bg-dark);
+    border-radius: 50%;
+}
+
+.timer-text {
+    position: relative;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Support Section */
+.support-card {
+    background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,183,0,0.1) 100%);
+    border: 1px solid rgba(255,215,0,0.3);
+}
+
+.support-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.support-item:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.support-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.support-icon.mpesa { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+.support-icon.emola { background: rgba(33, 150, 243, 0.2); color: #2196F3; }
+.support-icon.bank { background: rgba(156, 39, 176, 0.2); color: #9C27B0; }
+
+.support-details h4 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.support-details p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: monospace;
+}
+
+/* Hidden Class */
+.hidden { display: none !important; }
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    padding: 15px 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 2000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-icon {
+    font-size: 20px;
+}
+
+.toast.success .toast-icon { color: var(--primary); }
+.toast.error .toast-icon { color: #f44336; }
+
+/* Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .menu-item {
+        padding: 20px 10px;
+    }
+
+    .menu-icon {
+        font-size: 28px;
+    }
+
+    .menu-label {
+        font-size: 12px;
+    }
+}
 </style>
+<base target="_blank">
 </head>
 <body>
 
-<h2>🌙 Islam Moçambique</h2>
+<div class="container">
 
-<!-- LOGIN -->
-<div id="auth">
-<input id="numero" placeholder="84/86/82xxxxxxx"><br><br>
-<input id="otp" type="password" placeholder="digital PIN"><br><br>
-<button onclick="enviarOTP()">Receber código</button>
-<button onclick="login()">Entrar</button>
+    <!-- LOGIN SCREEN -->
+    <div id="auth" class="fade-in">
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-moon moon-icon"></i>
+            </div>
+            <h1 class="app-title">Islam Moçambique</h1>
+            <p class="app-subtitle">Educação Islâmica Online</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="numero" class="input-field" placeholder="84/86/82xxxxxxx" maxlength="9">
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="otp" class="input-field" placeholder="Código de acesso">
+            </div>
+
+            <button class="btn btn-secondary" onclick="enviarOTP()">
+                <i class="fab fa-whatsapp"></i>
+                Receber código via WhatsApp
+            </button>
+
+            <button class="btn btn-primary" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i>
+                Entrar
+            </button>
+        </div>
+
+        <p style="text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-secondary);">
+            <i class="fas fa-shield-alt"></i> Ambiente seguro e protegido
+        </p>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app" class="hidden">
+        <div class="header" style="padding: 20px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="font-size: 20px;">Assalamu Alaikum</h2>
+                    <p style="font-size: 12px; color: var(--text-secondary);">Bem-vindo de volta</p>
+                </div>
+                <div style="text-align: right;">
+                    <span id="nivel"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value"><i class="fas fa-star"></i> <span id="stars">0</span></div>
+                <div class="stat-label">Estrelas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" style="color: var(--secondary);"><i class="fas fa-fire"></i> <span id="streak">0</span></div>
+                <div class="stat-label">Dias Seguidos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" style="color: #e91e63;"><i class="fas fa-heart"></i> <span id="level">1</span></div>
+                <div class="stat-label">Nível</div>
+            </div>
+        </div>
+
+        <div class="card" style="padding: 20px;">
+            <h3 style="margin-bottom: 15px; font-size: 16px;"><i class="fas fa-compass"></i> Menu Principal</h3>
+
+            <div class="menu-grid">
+                <div class="menu-item" onclick="abrir('horario_de_salat', 'Horário de Salat')">
+                    <i class="fas fa-pray menu-icon"></i>
+                    <div class="menu-label">Salat</div>
+                    <div class="menu-sublabel">Horários de oração</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('alcorao', 'Alcorão')">
+                    <i class="fas fa-book-open menu-icon"></i>
+                    <div class="menu-label">Alcorão</div>
+                    <div class="menu-sublabel">Leitura e estudo</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('reversao_novo_muculmano', 'Novo Muçulmano')">
+                    <i class="fas fa-seedling menu-icon"></i>
+                    <div class="menu-label">Novo Muçulmano</div>
+                    <div class="menu-sublabel">Guia de conversão</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('alfabeto_arabe', 'Alfabeto Árabe')">
+                    <i class="fas fa-font menu-icon"></i>
+                    <div class="menu-label">Alfabeto</div>
+                    <div class="menu-sublabel">Aprender árabe</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('tasbih_digital', 'Tasbih Digital')">
+                    <i class="fas fa-calculator menu-icon"></i>
+                    <div class="menu-label">Tasbih</div>
+                    <div class="menu-sublabel">Contador digital</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('yassarna_parte_1', 'Yassarna 1')">
+                    <i class="fas fa-graduation-cap menu-icon"></i>
+                    <div class="menu-label">Yassarna 1</div>
+                    <div class="menu-sublabel">Primeira parte</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('yassarna_2_parte', 'Yassarna 2')">
+                    <i class="fas fa-graduation-cap menu-icon"></i>
+                    <div class="menu-label">Yassarna 2</div>
+                    <div class="menu-sublabel">Segunda parte</div>
+                </div>
+
+                <div class="menu-item" onclick="abrir('kalimah', 'Kalimah')">
+                    <i class="fas fa-star-and-crescent menu-icon"></i>
+                    <div class="menu-label">Kalimah</div>
+                    <div class="menu-sublabel">Declaração de fé</div>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <button class="btn btn-gold" onclick="tarefas()">
+                    <i class="fas fa-gift"></i> Ganhar Estrelas
+                </button>
+                <button class="btn btn-secondary" onclick="apoio()">
+                    <i class="fas fa-hand-holding-heart"></i> Apoio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- IFRAME CONTAINER -->
+    <div id="iframeContainer" class="iframe-container hidden">
+        <div class="iframe-header">
+            <button class="btn-back" onclick="fecharIframe()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <span class="iframe-title" id="iframeTitle">Conteúdo</span>
+        </div>
+        <iframe id="iframe" class="iframe-content"></iframe>
+    </div>
+
+    <!-- TASKS SCREEN -->
+    <div id="tarefas" class="hidden fade-in">
+        <div class="header">
+            <h2><i class="fas fa-tasks"></i> Tarefas</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;">Complete tarefas para ganhar estrelas</p>
+        </div>
+
+        <div class="card task-card">
+            <h3 style="margin-bottom: 15px;"><i class="fas fa-star"></i> Tarefas Disponíveis</h3>
+
+            <div class="task-item" onclick="partilhar()">
+                <div class="task-info">
+                    <div class="task-icon share">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <div class="task-text">
+                        <h4>Partilhar App</h4>
+                        <p>Convide amigos pelo WhatsApp</p>
+                    </div>
+                </div>
+                <div class="task-reward">
+                    <i class="fas fa-star"></i> +2
+                </div>
+            </div>
+
+            <div class="task-item" onclick="verAds()">
+                <div class="task-info">
+                    <div class="task-icon ads">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <div class="task-text">
+                        <h4>Ver Anúncio</h4>
+                        <p>Assista por 10 segundos</p>
+                    </div>
+                </div>
+                <div class="task-reward">
+                    <i class="fas fa-star"></i> +3
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <h4 style="margin-bottom: 15px;"><i class="fas fa-crown"></i> Ativar PRO</h4>
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="codigoPro" class="input-field" placeholder="Digite o código PRO">
+                </div>
+                <button class="btn btn-gold" onclick="ativarPro()">
+                    <i class="fas fa-crown"></i> Ativar PRO
+                </button>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px; text-align: center;">
+                    Acesso ilimitado por 35 dias
+                </p>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="voltarMenu()">
+            <i class="fas fa-home"></i> Menu Principal
+        </button>
+    </div>
+
+    <!-- ADS VIEWER -->
+    <div id="ads" class="hidden fade-in">
+        <div class="header">
+            <h2><i class="fas fa-ad"></i> Anúncio</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;">Assista para ganhar recompensas</p>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <div id="adsBox" class="ads-viewer">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="timer-circle" id="timerContainer" style="--progress: 0%;">
+                <span class="timer-text" id="tempo">10</span>
+            </div>
+
+            <p style="color: var(--text-secondary); margin: 15px 0;">
+                Aguarde o tempo acabar para receber suas estrelas
+            </p>
+
+            <button class="btn btn-primary" onclick="proximoAds()" id="btnNext" style="opacity: 0.5; pointer-events: none;">
+                <i class="fas fa-forward"></i> Próximo Anúncio
+            </button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="voltarAnterior()">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+    </div>
+
+    <!-- SUPPORT SCREEN -->
+    <div id="apoioScreen" class="hidden fade-in">
+        <div class="header">
+            <h2><i class="fas fa-hand-holding-heart"></i> Apoie o Projeto</h2>
+            <p style="color: var(--text-secondary); font-size: 14px;">Sua contribuição ajuda a difundir o Islam</p>
+        </div>
+
+        <div class="card support-card">
+            <p style="text-align: center; margin-bottom: 20px; line-height: 1.6;">
+                A <strong>Islam Moçambique</strong> trabalha arduamente para difundir o din de Allah. 
+                Sua contribuição é fundamental para continuarmos este trabalho.
+            </p>
+
+            <div class="support-item" onclick="copiarTexto('1228803')">
+                <div class="support-icon mpesa">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="support-details">
+                    <h4>M-Pesa</h4>
+                    <p>1228803 (Bebane)</p>
+                </div>
+                <i class="fas fa-copy" style="color: var(--text-secondary);"></i>
+            </div>
+
+            <div class="support-item" onclick="copiarTexto('860407269')">
+                <div class="support-icon emola">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="support-details">
+                    <h4>E-mola</h4>
+                    <p>860407269 (Anacleto Bebane)</p>
+                </div>
+                <i class="fas fa-copy" style="color: var(--text-secondary);"></i>
+            </div>
+
+            <div class="support-item" onclick="copiarTexto('000100000012473356257')">
+                <div class="support-icon bank">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="support-details">
+                    <h4>Millennium BIM</h4>
+                    <p>NIB: 000100000012473356257</p>
+                </div>
+                <i class="fas fa-copy" style="color: var(--text-secondary);"></i>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; padding: 15px; background: rgba(0,200,83,0.1); border-radius: 12px;">
+                <i class="fas fa-pray" style="font-size: 24px; color: var(--primary); margin-bottom: 10px;"></i>
+                <p style="font-size: 14px; font-style: italic;">"Que Allah triplique sua recompensa. Ameen"</p>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="voltarMenu()">
+            <i class="fas fa-arrow-left"></i> Voltar ao Menu
+        </button>
+    </div>
+
 </div>
 
-<!-- APP -->
-<div id="app" class="hidden">
-<p>⭐ <span id="stars"></span></p>
-<p><span id="nivel"></span></p>
-
-<div class="card">
-<button onclick="abrir('horario_de_salat')">Salat</button>
-<button onclick="abrir('alcorao')">Alcorão</button>
-<button onclick="abrir('reversao_novo_muculmano')">Novo Muçulmano</button>
-<button onclick="abrir('alfabeto_arabe')">Alfabeto</button>
-<button onclick="abrir('tasbih_digital')">Tasbih</button>
-<button onclick="abrir('yassarna_parte_1')">Yassarna 1</button>
-<button onclick="abrir('yassarna_2_parte')">Yassarna 2</button>
-
-<button onclick="tarefas()">Ganhar Estrelas</button>
-<button onclick="apoio()">Apoio</button>
-</div>
-</div>
-
-<!-- IFRAME PARA SITES SECUNDÁRIOS -->
-<div id="iframeContainer" class="hidden">
-<button onclick="fecharIframe()">⬅ Voltar ao menu principal</button>
-<iframe id="iframe"></iframe>
-</div>
-
-<!-- TAREFAS -->
-<div id="tarefas" class="hidden card">
-<button onclick="partilhar()">Partilhar (+2⭐)</button>
-<button onclick="verAds()">Ver anúncio (+3⭐)</button>
-<br><br>
-<input id="codigoPro" type="password" placeholder="digital PIN"><br><br>
-<button onclick="ativarPro()">Ativar PRO</button>
-<p id="timer"></p>
-<button onclick="voltarAnterior()">Voltar</button>
-<button onclick="voltarMenu()">Menu Principal</button>
-</div>
-
-<!-- ADS -->
-<div id="ads" class="hidden card">
-<div id="adsBox"></div>
-<p id="tempo"></p>
-<button onclick="proximoAds()">Ganhar mais estrelas</button>
-<button onclick="voltarAnterior()">Voltar</button>
-<button onclick="voltarMenu()">Menu Principal</button>
+<!-- Toast Notification -->
+<div id="toast" class="toast">
+    <i class="fas toast-icon"></i>
+    <span id="toastMessage"></span>
 </div>
 
 <script>
-let user=null;
-let adsIndex=0;
-let telaAnterior=null;
-let ADS=[
-"ads1.jpg","ads2.png","ads3.jpg","ads4.png","ads5.jpg",
-"ads6.mp4","ads7.mp4","ads8.mp4","ads9.mp4","ads10.mp4"
+// Database and State Management
+let user = null;
+let adsIndex = 0;
+let telaAnterior = null;
+let timerInterval = null;
+
+const ADS = [
+    "ads1.jpg", "ads2.png", "ads3.jpg", "ads4.png", "ads5.jpg",
+    "ads6.mp4", "ads7.mp4", "ads8.mp4", "ads9.mp4", "ads10.mp4"
 ];
 
-function getDB(){return JSON.parse(localStorage.getItem("db"))||{}}
-function saveDB(db){localStorage.setItem("db",JSON.stringify(db))}
-function converter(n){let m=["A","B","C","D","E","F","G","H","I","J"];return n.split("").map(x=>m[x]).join("")}
-function gerarOTP(numero){return converter(numero.slice(-4))}
-
-function enviarOTP(){
-let numero = document.getElementById("numero").value;
-let otp = gerarOTP(numero);
-let msg = "Seu código de acesso é: " + otp;
-window.open("https://wa.me/"+numero+"?text="+encodeURIComponent(msg))
+// Utility Functions
+function getDB() {
+    return JSON.parse(localStorage.getItem("db")) || {};
 }
 
-// LOGIN SEGURANÇA
-function login(){
-let n = numero.value;
-let o = otp.value;
-let db = getDB();
-if(!db[n]){alert("Número não registrado. Confirme seu número via WhatsApp com o administrador."); return;}
-if(o===gerarOTP(n)){
-user=n;
-saveDB(db);
-auth.classList.add("hidden");
-app.classList.remove("hidden");
-update();
-avisoPro();
-}else alert("Código inválido");
+function saveDB(db) {
+    localStorage.setItem("db", JSON.stringify(db));
 }
 
-function update(){
-let db=getDB();
-let u=db[user];
-if(new Date().toDateString()!=new Date(u.data).toDateString()){u.shares=0; u.data=Date.now();}
-if(u.pro && Date.now()>u.expira){u.pro=false;}
-stars.innerText=u.estrelas;
-nivel.innerText=u.pro?"PRO ATIVO":"NORMAL";
-saveDB(db);
-if(!u.pro){setTimeout(avisoPro,3000);}
+function converter(n) {
+    let m = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    return n.split("").map(x => m[parseInt(x)] || x).join("");
 }
 
-function avisoPro(){let db=getDB();let u=db[user];if(!u.pro){alert("Ative o PRO e use sem gastar estrelas por 35 dias (somente admin pode ativar)");}}
-
-// ABRIR IFRAME
-function abrir(p){
-telaAnterior='app';
-let db=getDB();
-let u=db[user];
-if(!u.pro){if(u.estrelas<8){alert("Sem estrelas");return;} u.estrelas-=8;}
-saveDB(db);
-update();
-app.classList.add("hidden");
-iframeContainer.classList.remove("hidden");
-iframe.src="https://fatahanacletobebane-ui.github.io/web_IM/"+p+"/index.html";
-}
-function fecharIframe(){iframe.src=""; iframeContainer.classList.add("hidden"); app.classList.remove("hidden");}
-
-// PARTILHAR
-function partilhar(){
-let db=getDB(); let u=db[user];
-if(u.shares>=10){alert("Limite diário"); return;}
-window.open("https://wa.me/?text=https://fatahanacletobebane-ui.github.io/web_IM/");
-u.estrelas+=2; u.shares++;
-saveDB(db); update();
+function gerarOTP(numero) {
+    return converter(numero.slice(-4));
 }
 
-// ADS
-function verAds(){telaAnterior='tarefas'; hide(); ads.classList.remove("hidden"); mostrarAds();}
-function mostrarAds(){let file=ADS[adsIndex]; if(file.includes(".mp4")){adsBox.innerHTML=`<video src="${file}" autoplay></video>`;}else{adsBox.innerHTML=`<img src="${file}">`;} tempoAds();}
-function tempoAds(){let t=10; tempo.innerText=t; let i=setInterval(()=>{t--; tempo.innerText=t; if(t<=0){clearInterval(i); let db=getDB(); db[user].estrelas+=3; saveDB(db); update();}},1000);}
-function proximoAds(){adsIndex=(adsIndex+1)%ADS.length; mostrarAds();}
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastIcon = toast.querySelector('.toast-icon');
+    const toastMessage = document.getElementById('toastMessage');
 
-// PRO
-function ativarPro(){let code=codigoPro.value; if(code===converter(user)){let db=getDB(); db[user].pro=true; db[user].expira=Date.now()+35*24*60*60*1000; saveDB(db); update(); alert("PRO ativado pelo admin");} else{alert("Código inválido");}}
+    toast.className = 'toast ' + type;
+    toastIcon.className = 'fas toast-icon ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
+    toastMessage.textContent = message;
 
-// VOLTAR
-function voltarAnterior(){hide(); if(telaAnterior) document.getElementById(telaAnterior).classList.remove("hidden"); telaAnterior=null;}
-function voltarMenu(){hide(); app.classList.remove("hidden"); telaAnterior=null;}
-function tarefas(){hide(); tarefas.classList.remove("hidden"); telaAnterior='app';}
-function hide(){app.classList.add("hidden"); tarefas.classList.add("hidden"); ads.classList.add("hidden"); iframeContainer.classList.add("hidden");}
-
-// APOIO
-function apoio(){
-alert("A Islam Moçambique tem trabalhado arduamente para difundir o din de Allah.\n\nMpesa paga fácil: 1228803 (Bebane)\nE-mola: 860407269 (Anacleto Bebane)\nMillennium BIM NIB: 000100000012473356257\n\nQue Allah triplique. Ameen");
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
+function hideAllScreens() {
+    document.getElementById('auth').classList.add('hidden');
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('tarefas').classList.add('hidden');
+    document.getElementById('ads').classList.add('hidden');
+    document.getElementById('apoioScreen').classList.add('hidden');
+    document.getElementById('iframeContainer').classList.add('hidden');
+}
+
+// OTP Functions
+function enviarOTP() {
+    const numero = document.getElementById("numero").value;
+
+    if (!numero || numero.length < 9) {
+        showToast('Digite um número válido', 'error');
+        return;
+    }
+
+    const otp = gerarOTP(numero);
+    const msg = `Assalamu Alaikum! Seu código de acesso Islam Moçambique é: ${otp}`;
+
+    window.open(`https://wa.me/258${numero}?text=${encodeURIComponent(msg)}`, '_blank');
+    showToast('Código enviado pelo WhatsApp!');
+}
+
+// Login Function
+function login() {
+    const n = document.getElementById("numero").value;
+    const o = document.getElementById("otp").value;
+    const db = getDB();
+
+    if (!db[n]) {
+        showToast('Número não registrado. Contacte o administrador.', 'error');
+        return;
+    }
+
+    if (o === gerarOTP(n)) {
+        user = n;
+        hideAllScreens();
+        document.getElementById('app').classList.remove('hidden');
+        update();
+        showToast('Bem-vindo!');
+
+        if (!db[n].pro) {
+            setTimeout(() => {
+                showToast('Ative o PRO para acesso ilimitado!', 'success');
+            }, 2000);
+        }
+    } else {
+        showToast('Código inválido', 'error');
+    }
+}
+
+// Update UI
+function update() {
+    const db = getDB();
+    const u = db[user];
+
+    if (!u) return;
+
+    // Reset daily shares
+    if (new Date().toDateString() !== new Date(u.data).toDateString()) {
+        u.shares = 0;
+        u.data = Date.now();
+    }
+
+    // Check PRO expiration
+    if (u.pro && Date.now() > u.expira) {
+        u.pro = false;
+    }
+
+    // Update stats
+    document.getElementById('stars').textContent = u.estrelas || 0;
+    document.getElementById('streak').textContent = u.streak || 0;
+    document.getElementById('level').textContent = u.level || 1;
+
+    // Update PRO badge
+    const nivelEl = document.getElementById('nivel');
+    if (u.pro) {
+        nivelEl.innerHTML = '<span class="badge-pro"><i class="fas fa-crown"></i> PRO</span>';
+    } else {
+        nivelEl.innerHTML = '<span style="background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; font-size: 12px;">NORMAL</span>';
+    }
+
+    saveDB(db);
+}
+
+// Open Content in Iframe
+function abrir(p, title) {
+    telaAnterior = 'app';
+    const db = getDB();
+    const u = db[user];
+
+    if (!u.pro) {
+        if (u.estrelas < 8) {
+            showToast('Estrelas insuficientes! Complete tarefas.', 'error');
+            tarefas();
+            return;
+        }
+        u.estrelas -= 8;
+        showToast('-8 estrelas utilizadas');
+    }
+
+    saveDB(db);
+    update();
+
+    hideAllScreens();
+    document.getElementById('iframeContainer').classList.remove('hidden');
+    document.getElementById('iframeTitle').textContent = title || p;
+    document.getElementById('iframe').src = `https://fatahanacletobebane-ui.github.io/web_IM/${p}/index.html`;
+}
+
+function fecharIframe() {
+    document.getElementById('iframe').src = '';
+    hideAllScreens();
+    document.getElementById('app').classList.remove('hidden');
+}
+
+// Tasks Screen
+function tarefas() {
+    telaAnterior = 'app';
+    hideAllScreens();
+    document.getElementById('tarefas').classList.remove('hidden');
+}
+
+// Share Function
+function partilhar() {
+    const db = getDB();
+    const u = db[user];
+
+    if (u.shares >= 10) {
+        showToast('Limite diário atingido', 'error');
+        return;
+    }
+
+    const text = "Assalamu Alaikum! Descubra o Islam Moçambique App - Educação Islâmica Online: https://fatahanacletobebane-ui.github.io/web_IM/";
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+
+    u.estrelas += 2;
+    u.shares++;
+    saveDB(db);
+    update();
+    showToast('+2 estrelas ganhas!');
+}
+
+// Ads Functions
+function verAds() {
+    telaAnterior = 'tarefas';
+    hideAllScreens();
+    document.getElementById('ads').classList.remove('hidden');
+    mostrarAds();
+}
+
+function mostrarAds() {
+    const file = ADS[adsIndex];
+    const adsBox = document.getElementById('adsBox');
+
+    if (file.includes(".mp4")) {
+        adsBox.innerHTML = `<video src="${file}" autoplay muted loop class="ads-media"></video>`;
+    } else {
+        adsBox.innerHTML = `<img src="${file}" class="ads-media" alt="Anúncio">`;
+    }
+
+    iniciarTimer();
+}
+
+function iniciarTimer() {
+    let t = 10;
+    const tempoEl = document.getElementById('tempo');
+    const timerContainer = document.getElementById('timerContainer');
+    const btnNext = document.getElementById('btnNext');
+
+    btnNext.style.opacity = '0.5';
+    btnNext.style.pointerEvents = 'none';
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        t--;
+        tempoEl.textContent = t;
+        timerContainer.style.setProperty('--progress', `${(10-t) * 10}%`);
+
+        if (t <= 0) {
+            clearInterval(timerInterval);
+            const db = getDB();
+            db[user].estrelas += 3;
+            saveDB(db);
+            update();
+            showToast('+3 estrelas ganhas!');
+
+            btnNext.style.opacity = '1';
+            btnNext.style.pointerEvents = 'auto';
+        }
+    }, 1000);
+}
+
+function proximoAds() {
+    adsIndex = (adsIndex + 1) % ADS.length;
+    mostrarAds();
+}
+
+// PRO Activation
+function ativarPro() {
+    const code = document.getElementById('codigoPro').value;
+
+    if (code === converter(user)) {
+        const db = getDB();
+        db[user].pro = true;
+        db[user].expira = Date.now() + 35 * 24 * 60 * 60 * 1000;
+        saveDB(db);
+        update();
+        showToast('PRO ativado com sucesso!');
+        document.getElementById('codigoPro').value = '';
+    } else {
+        showToast('Código inválido', 'error');
+    }
+}
+
+// Support Screen
+function apoio() {
+    telaAnterior = 'app';
+    hideAllScreens();
+    document.getElementById('apoioScreen').classList.remove('hidden');
+}
+
+function copiarTexto(texto) {
+    navigator.clipboard.writeText(texto).then(() => {
+        showToast('Copiado: ' + texto);
+    });
+}
+
+// Navigation
+function voltarAnterior() {
+    hideAllScreens();
+    if (telaAnterior === 'app') {
+        document.getElementById('app').classList.remove('hidden');
+    } else if (telaAnterior === 'tarefas') {
+        document.getElementById('tarefas').classList.remove('hidden');
+    }
+}
+
+function voltarMenu() {
+    hideAllScreens();
+    document.getElementById('app').classList.remove('hidden');
+    telaAnterior = null;
+}
+
+// Initialize
+window.onload = function() {
+    // Check if user is already logged in
+    const lastUser = localStorage.getItem('lastUser');
+    if (lastUser) {
+        const db = getDB();
+        if (db[lastUser]) {
+            document.getElementById('numero').value = lastUser;
+        }
+    }
+};
 </script>
 
 </body>

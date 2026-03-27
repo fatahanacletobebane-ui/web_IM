@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islam Moçambique - Madrassa Digital</title>
+    <title>Islam Moçambique - Yassarna 1ª Parte</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -21,7 +21,6 @@
             background: var(--light);
         }
 
-        /* Topo */
         header {
             background: var(--primary);
             color: white;
@@ -30,16 +29,15 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 3px solid var(--gold);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Layout Principal */
         .main-layout {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
 
-        /* Sidebar - Índice de Aulas */
         .sidebar {
             width: 280px;
             background: white;
@@ -64,22 +62,14 @@
         .lesson-item {
             padding: 12px;
             border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: 0.3s;
             font-size: 0.9rem;
+            color: #444;
         }
 
-        .lesson-item:hover {
-            background: #f0f7f3;
-            color: var(--primary);
-        }
-
-        /* Área do PDF */
         .content-area {
             flex: 1;
             background: #525659;
-            display: flex;
-            flex-direction: column;
+            position: relative;
         }
 
         iframe {
@@ -88,7 +78,6 @@
             border: none;
         }
 
-        /* Botão WhatsApp */
         .btn-whatsapp {
             background: #25d366;
             color: white;
@@ -104,11 +93,10 @@
 
         .btn-whatsapp:hover {
             background: #128c7e;
-            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
-            .sidebar { display: none; } /* Esconde sidebar no telemóvel para focar no PDF */
+            .sidebar { display: none; }
         }
     </style>
 </head>
@@ -117,7 +105,7 @@
     <header>
         <div>
             <h2 style="margin:0;">Islam Moçambique</h2>
-            <small>Yassarnal Qur'aan - Parte 1</small>
+            <small>Yassarnal Qur'aan - Primeira Parte</small>
         </div>
         <a href="https://wa.me/258860407269" class="btn-whatsapp" target="_blank">
             <i class="fab fa-whatsapp"></i> Suporte
@@ -126,22 +114,22 @@
 
     <div class="main-layout">
         <aside class="sidebar">
-            <h3>Conteúdo das Aulas</h3>
+            <h3>Conteúdo - Parte 1</h3>
             <ul class="lesson-list">
-                <li class="lesson-item"><b>Lição 1:</b> Lesson on Nouqu't</li>
-                <li class="lesson-item"><b>Lição 2:</b> Single Letters (Letras Simples)</li>
-                <li class="lesson-item"><b>Lição 3-9:</b> Joint Forms (Formas Unidas)</li>
+                <li class="lesson-item"><b>Lição 1:</b> Nouqu't</li>
+                <li class="lesson-item"><b>Lição 2:</b> Letras Simples</li>
                 <li class="lesson-item"><b>Lição 10:</b> Takhti</li>
                 <li class="lesson-item"><b>Lição 19:</b> Letras com Hurrakaat</li>
-                <li class="lesson-item"><b>Lição 31:</b> Lesson on Soukoon (Jazm)</li>
+                <li class="lesson-item"><b>Lição 25:</b> Duas Letras com Hurrakaat</li>
+                <li class="lesson-item"><b>Lição 31:</b> Soukoon (Jazm)</li>
             </ul>
             <p style="margin-top:20px; font-size: 0.8rem; color: #666;">
-                <i>Dica: Role o PDF à direita para navegar entre as páginas.</i>
+                <i>O manual abrirá à direita. Pode fazer zoom diretamente no leitor.</i>
             </p>
         </aside>
 
         <main class="content-area">
-            <iframe src="Yassarna 1ª Parte.pdf#toolbar=1" type="application/pdf"></iframe>
+            <iframe src="https://drive.google.com/file/d/1JD_2CTyF7Os47707g_Vt6MV1kR9Xwawm/preview" allow="autoplay"></iframe>
         </main>
     </div>
 

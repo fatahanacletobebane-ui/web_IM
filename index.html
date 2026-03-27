@@ -1,2344 +1,1480 @@
 <!DOCTYPE html>
-<html lang="pt" dir="rtl">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islam Moçambique - Madrassa Online Nível 1</title>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    
+    <title>Islam Moçambique - Aprenda a Ler o Alcorão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
-        
+        :root {
+            --primary: #1a5f4a;
+            --primary-dark: #0d3d2e;
+            --secondary: #d4af37;
+            --accent: #2c8a6d;
+            --light: #f8f9fa;
+            --dark: #1a1a1a;
+            --gold: #c9a227;
+            --cream: #faf8f3;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-green: #0d4a38;
-            --secondary-green: #1a6b52;
-            --accent-gold: #d4af37;
-            --light-gold: #f4e4c1;
-            --white: #ffffff;
-            --light-bg: #f5f5f0;
-            --text-dark: #2c3e50;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-        }
-
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f5f0 0%, #e8e6d9 100%);
-            color: var(--text-dark);
-            min-height: 100vh;
+            background-color: var(--cream);
+            color: var(--dark);
+            line-height: 1.6;
             overflow-x: hidden;
-            direction: ltr;
         }
 
-        .arabic-font {
-            font-family: 'Scheherazade New', 'Amiri', serif;
-            font-size: 2.5rem;
-            line-height: 1.8;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
-            color: var(--white);
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            position: sticky;
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            position: fixed;
+            width: 100%;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 10px;
             font-size: 1.5rem;
-            color: var(--primary-green);
-            font-weight: bold;
+            font-weight: 700;
         }
 
-        .logo-text h1 {
-            font-family: 'Amiri', serif;
-            font-size: 1.8rem;
-            margin: 0;
-            color: var(--accent-gold);
-        }
-
-        .logo-text p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin: 0;
+        .logo i {
+            color: var(--secondary);
+            font-size: 2rem;
         }
 
         .nav-links {
             display: flex;
+            list-style: none;
             gap: 2rem;
-            align-items: center;
         }
 
         .nav-links a {
-            color: var(--white);
+            color: white;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
             cursor: pointer;
         }
 
-        .nav-links a:hover {
-            color: var(--accent-gold);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-green);
-            font-weight: bold;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Hero */
+        /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
-            color: var(--white);
-            padding: 4rem 2rem;
-            border-radius: 20px;
-            margin-bottom: 3rem;
+            margin-top: 80px;
+            background: linear-gradient(rgba(26, 95, 74, 0.9), rgba(13, 61, 46, 0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231a5f4a" width="100" height="100"/><path fill="%230d3d2e" d="M0 50 Q25 30 50 50 T100 50 L100 100 L0 100 Z"/></svg>');
+            background-size: cover;
+            color: white;
+            padding: 5rem 5%;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .hero h2 {
+        .hero::before {
+            content: 'بسم الله الرحمن الرحيم';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             font-family: 'Amiri', serif;
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--accent-gold);
+            font-size: 2rem;
+            opacity: 0.3;
+            color: var(--secondary);
         }
 
-        .hero p {
-            font-size: 1.2rem;
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
             margin-bottom: 2rem;
-            opacity: 0.95;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
-            display: inline-block;
             padding: 1rem 2.5rem;
-            background: var(--accent-gold);
-            color: var(--primary-green);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
             border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
             cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
         }
 
         .btn-secondary {
             background: transparent;
-            border: 2px solid var(--accent-gold);
-            color: var(--accent-gold);
+            color: white;
+            border: 2px solid white;
         }
 
         .btn-secondary:hover {
-            background: var(--accent-gold);
-            color: var(--primary-green);
+            background: white;
+            color: var(--primary);
         }
 
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-success { background: var(--success); color: white; }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        /* Progress Tracker */
+        .progress-section {
+            background: white;
+            padding: 2rem 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        /* Cards */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-            border-top: 4px solid var(--accent-gold);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--light-gold) 0%, var(--accent-gold) 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-green);
-        }
-
-        .card h3 {
-            font-family: 'Amiri', serif;
-            font-size: 1.5rem;
-            color: var(--primary-green);
-            margin-bottom: 1rem;
-        }
-
-        /* Schedule */
-        .schedule-section {
-            background: var(--white);
-            padding: 3rem;
-            border-radius: 20px;
-            margin-bottom: 3rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-
-        .section-title {
-            font-family: 'Amiri', serif;
-            font-size: 2.5rem;
-            color: var(--primary-green);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .time-slots {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .time-slot {
-            background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .time-slot.active {
-            background: var(--primary-green);
-            color: var(--white);
-            border-color: var(--primary-green);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active { display: flex; }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #999;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--primary-green);
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        /* Dashboard */
-        .dashboard {
-            display: none;
-            background: var(--white);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-        }
-        .dashboard.active { display: block; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
-            color: var(--white);
-            padding: 1.5rem;
-            border-radius: 15px;
-            text-align: center;
-        }
-        .stat-card h4 { font-size: 2rem; color: var(--accent-gold); margin-bottom: 0.5rem; }
-
-        /* Admin Panel - PROTEGIDO */
-        .admin-panel {
-            display: none;
-            background: var(--white);
-            border-radius: 20px;
-            padding: 2rem;
-        }
-        .admin-panel.active { display: block; }
-
-        .admin-login-wall {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
-            border-radius: 20px;
-            border: 3px solid var(--accent-gold);
-        }
-
-        .admin-login-wall h2 {
-            color: var(--primary-green);
-            margin-bottom: 1rem;
-            font-family: 'Amiri', serif;
-        }
-
-        .admin-login-wall .pin-input {
-            font-size: 2rem;
-            letter-spacing: 1rem;
-            text-align: center;
-            width: 200px;
-            margin: 2rem auto;
-            display: block;
-        }
-
-        .admin-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
+        .progress-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .admin-header h2 {
-            font-family: 'Amiri', serif;
-            color: var(--accent-gold);
-            margin: 0;
+        .progress-stats {
+            display: flex;
+            gap: 2rem;
         }
 
-        .admin-logout-btn {
-            background: var(--danger);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            border: none;
-            font-weight: 600;
+        .stat {
+            text-align: center;
         }
 
-        .admin-data-hidden {
-            display: none !important;
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
         }
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        th {
-            background: var(--primary-green);
-            color: var(--white);
-        }
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-approved { background: #d4edda; color: #155724; }
-        .status-rejected { background: #f8d7da; color: #721c24; }
 
-        /* Lesson Content */
-        .lesson-content {
-            display: none;
-            background: var(--white);
-            border-radius: 20px;
-            padding: 3rem;
+        .progress-bar-container {
+            flex: 1;
+            min-width: 300px;
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 1s ease;
+            border-radius: 5px;
+        }
+
+        /* Course Sections */
+        .section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
             margin-bottom: 3rem;
         }
-        .lesson-content.active { display: block; }
 
-        .lesson-nav {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            border-bottom: 2px solid var(--light-bg);
-            padding-bottom: 1rem;
-        }
-        .lesson-nav button {
-            padding: 0.8rem 1.5rem;
-            border: 2px solid var(--primary-green);
-            background: transparent;
-            color: var(--primary-green);
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .lesson-nav button.active {
-            background: var(--primary-green);
-            color: var(--white);
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
         }
 
-        .lesson-tab { display: none; }
-        .lesson-tab.active { display: block; }
-
-        /* NOORANI QAIDA - RTL */
-        .arabic-alphabet-container {
-            direction: rtl;
-            text-align: right;
-            font-family: 'Scheherazade New', 'Amiri', serif;
-            margin: 2rem 0;
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
         }
 
-        .alphabet-row {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+        .section-title p {
+            color: #666;
+            margin-top: 1rem;
+        }
+
+        /* Alphabet Grid */
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
         }
 
         .letter-card {
-            background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-            border: 3px solid var(--accent-gold);
+            background: white;
             border-radius: 15px;
-            padding: 1.5rem;
-            min-width: 100px;
+            padding: 2rem 1rem;
             text-align: center;
-            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--secondary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .letter-card:hover::before {
+            transform: scaleX(1);
         }
 
         .letter-card:hover {
-            transform: scale(1.1);
-            background: var(--light-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-color: var(--secondary);
         }
 
-        .letter-card .arabic-letter {
+        .letter-card.learned {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-color: var(--accent);
+        }
+
+        .letter-card.learned::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .arabic-letter {
+            font-family: 'Amiri', serif;
             font-size: 3rem;
-            color: var(--primary-green);
-            display: block;
+            color: var(--primary);
             margin-bottom: 0.5rem;
-            font-weight: bold;
+            display: block;
         }
 
-        .letter-card .letter-name {
+        .letter-name {
             font-size: 0.9rem;
             color: #666;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .content-section {
-            background: var(--light-bg);
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            border-right: 5px solid var(--accent-gold);
-        }
-
-        .content-section h4 {
-            color: var(--primary-green);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .content-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .content-section li {
-            padding: 0.5rem 0;
-            padding-right: 1.5rem;
-            position: relative;
-        }
-
-        .content-section li:before {
-            content: "•";
-            color: var(--accent-gold);
-            font-weight: bold;
-            position: absolute;
-            right: 0;
-        }
-
-        .arabic-text-display {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            margin: 1rem 0;
-            border: 2px solid var(--accent-gold);
-            direction: rtl;
-            font-family: 'Scheherazade New', serif;
-            font-size: 2rem;
-            color: var(--primary-green);
-        }
-
-        /* Test Section */
-        .test-section {
-            display: none;
-            background: linear-gradient(135deg, #fff9e6 0%, var(--white) 100%);
-            border: 3px solid var(--accent-gold);
-            border-radius: 20px;
-            padding: 3rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-        .test-section.active { display: block; }
-
-        .test-timer {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: var(--danger);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .question-container { margin-bottom: 2rem; }
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--primary-green);
             font-weight: 600;
         }
-        .options { display: flex; flex-direction: column; gap: 0.8rem; }
-        .option {
-            background: var(--white);
-            border: 2px solid #e0e0e0;
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .option:hover { border-color: var(--accent-gold); }
-        .option.selected { border-color: var(--primary-green); background: rgba(13, 74, 56, 0.1); }
 
-        /* WhatsApp */
-        .whatsapp-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: #25D366;
+        .letter-transliteration {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.3rem;
+        }
+
+        /* Learning Modules */
+        .modules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .module-number {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            background: var(--secondary);
+            color: var(--dark);
             width: 60px;
             height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            cursor: pointer;
-            z-index: 999;
-            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Footer */
-        .footer {
-            background: var(--primary-green);
-            color: var(--white);
-            padding: 3rem 0;
-            margin-top: 4rem;
-            text-align: center;
+        .module-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .hidden { display: none !important; }
-        
-        .alert {
+        .module-content {
+            padding: 2rem;
+        }
+
+        .lesson-list {
+            list-style: none;
+        }
+
+        .lesson-item {
             padding: 1rem;
-            border-radius: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .lesson-item:hover {
+            background: #f5f5f5;
+        }
+
+        .lesson-item.completed {
+            color: #aaa;
+        }
+
+        .lesson-item.completed .lesson-icon {
+            background: var(--accent);
+            color: white;
+        }
+
+        .lesson-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .lesson-duration {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s;
+        }
+
+        .quiz-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .quiz-dot.correct {
+            background: #4caf50;
+        }
+
+        .quiz-dot.wrong {
+            background: #f44336;
+        }
+
+        .question-box {
+            background: var(--cream);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 2px solid var(--secondary);
+        }
+
+        .question-text {
+            font-size: 1.3rem;
             margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .arabic-question {
+            font-family: 'Amiri', serif;
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin: 1rem 0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1.5rem;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-family: 'Amiri', serif;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #f0f8f5;
+        }
+
+        .option-btn.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .option-btn.wrong {
+            background: #ffcdd2;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .quiz-results {
+            text-align: center;
             display: none;
         }
-        .alert.show { display: block; }
-        .alert-success { background: #d4edda; color: #155724; }
-        .alert-warning { background: #fff3cd; color: #856404; }
-        .alert-danger { background: #f8d7da; color: #721c24; }
 
-        .security-notice {
-            background: #fff3cd;
-            border: 2px solid var(--warning);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) calc(var(--score) * 1%), #eee 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .score-text {
+            position: relative;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Joining Letters Section */
+        .joining-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 4rem 5%;
+        }
+
+        .joining-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .join-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .join-display {
+            font-family: 'Amiri', serif;
+            font-size: 3rem;
+            color: var(--primary);
+            margin: 1rem 0;
+            direction: rtl;
+        }
+
+        .join-explanation {
+            color: #666;
             font-size: 0.9rem;
         }
 
+        /* Contact Section */
+        .contact-section {
+            background: var(--primary-dark);
+            color: white;
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 3rem auto;
+        }
+
+        .contact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .contact-info p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #25d366;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: transform 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: #0d1f1a;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-top: 3px solid var(--secondary);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            margin: 1rem 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .header-content { flex-direction: column; gap: 1rem; }
-            .alphabet-row { justify-content: center; }
-            .letter-card { min-width: 80px; padding: 1rem; }
-            .letter-card .arabic-letter { font-size: 2rem; }
-            .form-row { grid-template-columns: 1fr; }
-            .admin-header { flex-direction: column; gap: 1rem; text-align: center; }
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-container {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: white;
+            padding: 1rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Achievement Badges */
+        .badge-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .badge {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #f9d423 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            opacity: 0.3;
+            transition: all 0.3s;
+        }
+
+        .badge.unlocked {
+            opacity: 1;
+            animation: bounce 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .badge::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            color: var(--dark);
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
     <!-- Header -->
-    <header class="header">
-        <div class="header-content">
+    <header>
+        <nav>
             <div class="logo">
-                <div class="logo-icon">☪</div>
-                <div class="logo-text">
-                    <h1>Islam Moçambique</h1>
-                    <p>Madrassa Online Nível 1</p>
-                </div>
+                <i class="fas fa-mosque"></i>
+                <span>Islam Moçambique</span>
             </div>
-            <nav class="nav-links" id="mainNav">
-                <a onclick="showSection('home')">Início</a>
-                <a onclick="showSection('curriculum')">Currículo</a>
-                <a onclick="showSection('schedule')">Horários</a>
-                <a onclick="openModal('loginModal')" id="loginLink">Entrar</a>
-                <a onclick="openModal('registerModal')" id="registerLink" class="btn" style="padding: 0.5rem 1.5rem;">Inscrever-se</a>
-                <div class="user-info hidden" id="userInfo">
-                    <span id="userName"></span>
-                    <div class="user-avatar" id="userAvatar"></div>
-                    <a onclick="logout()" style="cursor: pointer; margin-left: 1rem;">Sair</a>
-                </div>
-            </nav>
-        </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#alfabeto">Alfabeto</a></li>
+                <li><a href="#juncao">Junção</a></li>
+                <li><a href="#palavras">Palavras</a></li>
+                <li><a href="#avaliacoes">Avaliações</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
     </header>
 
-    <div class="container">
-        <div id="alertContainer"></div>
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-content animate">
+            <h1>Aprenda a Ler o Alcorão Sagrado</h1>
+            <p>Do alfabeto árabe à recitação completa. Um curso estruturado e interativo para todos os níveis.</p>
+            <div class="cta-buttons">
+                <a href="#alfabeto" class="btn btn-primary">Começar Agora</a>
+                <a href="#contacto" class="btn btn-secondary">Falar Conosco</a>
+            </div>
+        </div>
+    </section>
 
-        <!-- Home Section -->
-        <section id="home" class="section-content">
-            <div class="hero">
-                <div class="hero-content">
-                    <h2>Bem-vindo à Madrassa Online</h2>
-                    <p>Curso completo de Noorani Qaida Nível 1: Alfabeto Árabe, Kalimah, Duãs, Salat, Adab, Hadith, Fiq e Sirat. Duração: 3 meses.</p>
-                    <a onclick="openModal('registerModal')" class="btn">Começar Agora</a>
+    <!-- Progress Section -->
+    <section class="progress-section">
+        <div class="progress-container">
+            <div class="progress-stats">
+                <div class="stat">
+                    <div class="stat-value" id="lessonsCompleted">0</div>
+                    <div class="stat-label">Lições</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="quizzesPassed">0</div>
+                    <div class="stat-label">Avaliações</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="currentStreak">0</div>
+                    <div class="stat-label">Dias Seguidos</div>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="mainProgress"></div>
+            </div>
+            <div style="min-width: 100px; text-align: right;">
+                <span id="progressPercent">0%</span> Completo
+            </div>
+        </div>
+    </section>
+
+    <!-- Alphabet Section -->
+    <section class="section" id="alfabeto">
+        <div class="section-title animate">
+            <h2>Alfabeto Árabe</h2>
+            <p>Clique em cada letra para ouvir a pronúncia e marcar como aprendida</p>
+        </div>
+        
+        <div class="alphabet-grid" id="alphabetGrid">
+            <!-- Generated by JavaScript -->
+        </div>
+
+        <div class="badge-container">
+            <div class="badge unlocked" data-title="Iniciante">🌟</div>
+            <div class="badge" data-title="Estudante">📚</div>
+            <div class="badge" data-title="Praticante">✨</div>
+            <div class="badge" data-title="Hafiz">🎯</div>
+        </div>
+    </section>
+
+    <!-- Joining Letters Section -->
+    <section class="joining-section" id="juncao">
+        <div class="section-title animate">
+            <h2>Junção de Letras</h2>
+            <p>Aprenda como as letras se conectam para formar palavras</p>
+        </div>
+
+        <div class="joining-examples">
+            <div class="join-card animate">
+                <h3>Conexão Inicial</h3>
+                <div class="join-display">بـ + ـا = با</div>
+                <div class="join-explanation">Ba + Alif = Ba</div>
+            </div>
+            <div class="join-card animate">
+                <h3>Conexão Média</h3>
+                <div class="join-display">ـبـ + ـيـ = ـبيـ</div>
+                <div class="join-explanation">Letras no meio da palavra</div>
+            </div>
+            <div class="join-card animate">
+                <h3>Conexão Final</h3>
+                <div class="join-display">ـب + ـر = ـبر</div>
+                <div class="join-explanation">Letras no fim da palavra</div>
+            </div>
+            <div class="join-card animate">
+                <h3>Palavra Completa</h3>
+                <div class="join-display">ب + ا + ب = باب</div>
+                <div class="join-explanation">Bāb (Porta)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section class="section" id="palavras">
+        <div class="section-title animate">
+            <h2>Módulos de Aprendizagem</h2>
+            <p>Progresso estruturado do básico ao avançado</p>
+        </div>
+
+        <div class="modules-container">
+            <div class="module-card animate">
+                <div class="module-header">
+                    <div class="module-number">01</div>
+                    <h3>Reconhecimento de Letras</h3>
+                    <p>Formas isoladas e conectadas</p>
+                </div>
+                <div class="module-content">
+                    <ul class="lesson-list">
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">1</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Letras Solitárias</div>
+                                <div class="lesson-duration">15 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">2</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Posições Iniciais</div>
+                                <div class="lesson-duration">20 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">3</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Posições Médias</div>
+                                <div class="lesson-duration">20 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">4</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Posições Finais</div>
+                                <div class="lesson-duration">15 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-icon">📖</div>
-                    <h3>Noorani Qaida Nível 1</h3>
-                    <p>Alfabeto Árabe completo (29 letras) organizado da direita para esquerda. Apenas letras isoladas - sem junção.</p>
+            <div class="module-card animate">
+                <div class="module-header">
+                    <div class="module-number">02</div>
+                    <h3>Vogais e Harakat</h3>
+                    <p>Fatha, Kasra, Damma e Tanween</p>
                 </div>
-                <div class="card">
-                    <div class="card-icon">🤲</div>
-                    <h3>Kalimah & Duãs</h3>
-                    <p>As 6 Kalimah fundamentais e duãs essenciais para o dia a dia do muçulmano.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🕌</div>
-                    <h3>Salat Completa</h3>
-                    <p>Aprenda a oração desde o Wudu até o Taslim, com todos os recitados.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">📿</div>
-                    <h3>Adab, Hadith, Fiq & Sirat</h3>
-                    <p>Boas maneiras, hadiths selecionados, jurisprudência básica e biografia do Profeta.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Curriculum Section -->
-        <section id="curriculum" class="section-content hidden">
-            <div class="lesson-content active">
-                <h2 class="section-title">Currículo Completo</h2>
-                
-                <div class="lesson-nav">
-                    <button class="active" onclick="showLesson('noorani')">Noorani Qaida</button>
-                    <button onclick="showLesson('kalimah')">Kalimah</button>
-                    <button onclick="showLesson('duas')">Duãs</button>
-                    <button onclick="showLesson('salat')">Salat</button>
-                    <button onclick="showLesson('adab')">Adab</button>
-                    <button onclick="showLesson('hadith')">Hadith</button>
-                    <button onclick="showLesson('fiq')">Fiq</button>
-                    <button onclick="showLesson('sirat')">Sirat</button>
-                </div>
-
-                <!-- NOORANI QAIDA - Alfabeto Completo RTL -->
-                <div id="noorani" class="lesson-tab active">
-                    <h3 style="color: var(--primary-green);">Lição 1: Alif até Ya (Alfabeto Árabe Isolado)</h3>
-                    <p style="margin-bottom: 2rem; color: #666;">
-                        <strong>IMPORTANTE:</strong> O alfabeto árabe é lido da DIREITA para a ESQUERDA (RTL). 
-                        No Nível 1 do Noorani Qaida, aprendemos apenas as letras isoladas (Huruf Mufradat), sem junção.
-                    </p>
-
-                    <div class="arabic-alphabet-container">
-                        <!-- LINHA 1: Alif até Kha -->
-                        <div class="alphabet-row">
-                            <div class="letter-card" onclick="playLetter('alif')">
-                                <span class="arabic-letter">ا</span>
-                                <span class="letter-name">Alif</span>
+                <div class="module-content">
+                    <ul class="lesson-list">
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">1</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Fatha (a)</div>
+                                <div class="lesson-duration">15 minutos</div>
                             </div>
-                            <div class="letter-card" onclick="playLetter('ba')">
-                                <span class="arabic-letter">ب</span>
-                                <span class="letter-name">Ba</span>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">2</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Kasra (i)</div>
+                                <div class="lesson-duration">15 minutos</div>
                             </div>
-                            <div class="letter-card" onclick="playLetter('ta')">
-                                <span class="arabic-letter">ت</span>
-                                <span class="letter-name">Ta</span>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">3</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Damma (u)</div>
+                                <div class="lesson-duration">15 minutos</div>
                             </div>
-                            <div class="letter-card" onclick="playLetter('tha')">
-                                <span class="arabic-letter">ث</span>
-                                <span class="letter-name">Tha</span>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">4</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Sukun (sem vogal)</div>
+                                <div class="lesson-duration">20 minutos</div>
                             </div>
-                            <div class="letter-card" onclick="playLetter('jim')">
-                                <span class="arabic-letter">ج</span>
-                                <span class="letter-name">Jim</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ha')">
-                                <span class="arabic-letter">ح</span>
-                                <span class="letter-name">Ha</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('kha')">
-                                <span class="arabic-letter">خ</span>
-                                <span class="letter-name">Kha</span>
-                            </div>
-                        </div>
-
-                        <!-- LINHA 2: Dal até Qaf -->
-                        <div class="alphabet-row">
-                            <div class="letter-card" onclick="playLetter('dal')">
-                                <span class="arabic-letter">د</span>
-                                <span class="letter-name">Dal</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('dhal')">
-                                <span class="arabic-letter">ذ</span>
-                                <span class="letter-name">Dhal</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ra')">
-                                <span class="arabic-letter">ر</span>
-                                <span class="letter-name">Ra</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('zay')">
-                                <span class="arabic-letter">ز</span>
-                                <span class="letter-name">Zay</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('sin')">
-                                <span class="arabic-letter">س</span>
-                                <span class="letter-name">Sin</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('shin')">
-                                <span class="arabic-letter">ش</span>
-                                <span class="letter-name">Shin</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('sad')">
-                                <span class="arabic-letter">ص</span>
-                                <span class="letter-name">Sad</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('dad')">
-                                <span class="arabic-letter">ض</span>
-                                <span class="letter-name">Dad</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ta_heavy')">
-                                <span class="arabic-letter">ط</span>
-                                <span class="letter-name">Ta (pesado)</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('dha')">
-                                <span class="arabic-letter">ظ</span>
-                                <span class="letter-name">Dha</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ain')">
-                                <span class="arabic-letter">ع</span>
-                                <span class="letter-name">Ain</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ghain')">
-                                <span class="arabic-letter">غ</span>
-                                <span class="letter-name">Ghain</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('fa')">
-                                <span class="arabic-letter">ف</span>
-                                <span class="letter-name">Fa</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('qaf')">
-                                <span class="arabic-letter">ق</span>
-                                <span class="letter-name">Qaf</span>
-                            </div>
-                        </div>
-
-                        <!-- LINHA 3: Kaf até Ya -->
-                        <div class="alphabet-row">
-                            <div class="letter-card" onclick="playLetter('kaf')">
-                                <span class="arabic-letter">ك</span>
-                                <span class="letter-name">Kaf</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('lam')">
-                                <span class="arabic-letter">ل</span>
-                                <span class="letter-name">Lam</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('mim')">
-                                <span class="arabic-letter">م</span>
-                                <span class="letter-name">Mim</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('nun')">
-                                <span class="arabic-letter">ن</span>
-                                <span class="letter-name">Nun</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ha')">
-                                <span class="arabic-letter">ه</span>
-                                <span class="letter-name">Ha (suave)</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('waw')">
-                                <span class="arabic-letter">و</span>
-                                <span class="letter-name">Waw</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ya')">
-                                <span class="arabic-letter">ي</span>
-                                <span class="letter-name">Ya</span>
-                            </div>
-                        </div>
-
-                        <!-- LINHA 4: Letras especiais -->
-                        <div class="alphabet-row">
-                            <div class="letter-card" onclick="playLetter('hamza')">
-                                <span class="arabic-letter">ء</span>
-                                <span class="letter-name">Hamza</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('ta_marbuta')">
-                                <span class="arabic-letter">ة</span>
-                                <span class="letter-name">Ta Marbuta</span>
-                            </div>
-                            <div class="letter-card" onclick="playLetter('alif_maksura')">
-                                <span class="arabic-letter">ى</span>
-                                <span class="letter-name">Alif Maksura</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>📚 Estrutura do Curso (3 Meses)</h4>
-                        <ul>
-                            <li><strong>Semanas 1-4:</strong> Alif até Kha (7 letras) - Pronúncia e Makhraj</li>
-                            <li><strong>Semanas 5-8:</strong> Dal até Qaf (14 letras) - Letras de empréstimo</li>
-                            <li><strong>Semanas 9-12:</strong> Kaf até Ya + especiais (8 letras)</li>
-                            <li><strong>Nível 2:</strong> Junção de letras (Murakkabat) - NÃO incluído neste nível</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- KALIMAH -->
-                <div id="kalimah" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">As Seis Kalimah do Islam</h3>
-                    
-                    <div class="content-section">
-                        <h4>1. Kalimah Tayyibah</h4>
-                        <div class="arabic-text-display" style="font-size: 2rem;">
-                            لَا إِلَٰهَ إِلَّا ٱللَّٰهُ مُحَمَّدٌ رَسُولُ ٱللَّٰهِ
-                        </div>
-                        <p><strong>Significado:</strong> "Não há divindade digna de adoração exceto Allah, e Muhammad é o Mensageiro de Allah."</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>2. Kalimah Shahadah</h4>
-                        <div class="arabic-text-display" style="font-size: 1.5rem;">
-                            أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا ٱللَّٰهُ وَحْدَهُۥ لَا شَرِيكَ لَهُۥ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُۥ وَرَسُولُهُۥ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>3. Kalimah Tamjeed</h4>
-                        <div class="arabic-text-display" style="font-size: 1.5rem;">
-                            سُبْحَانَ ٱللَّٰهِ وَٱلْحَمْدُ لِلَّٰهِ وَلَا إِلَٰهَ إِلَّا ٱللَّٰهُ وَٱللَّٰهُ أَكْبَرُ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>4. Kalimah Tawhid</h4>
-                        <div class="arabic-text-display" style="font-size: 1.3rem;">
-                            لَا إِلَٰهَ إِلَّا ٱللَّٰهُ وَحْدَهُۥ لَا شَرِيكَ لَهُۥ لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ يُحْىِۦ وَيُمِيتُ وَهُوَ حَىٌّ لَا يَمُوتُ أَبَدًا أَبَدًا ذُو ٱلْجَلَالِ وَٱلْإِكْرَامِ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>5. Kalimah Istighfar</h4>
-                        <div class="arabic-text-display" style="font-size: 1.3rem;">
-                            أَسْتَغْفِرُ ٱللَّٰهَ رَبِّى مِنْ كُلِّ ذَنْبٍ أَذْنَبْتُهُۥ عَمَدًا أَوْ خَطَأًۭ سِرًّۭا أَوْ عَلَانِيَةًۭ وَأَتُوبُ إِلَيْهِ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>6. Kalimah Radd Kufr</h4>
-                        <div class="arabic-text-display" style="font-size: 1.2rem;">
-                            ٱللَّٰهُمَّ إِنِّىٓ أَعُوذُ بِكَ مِنْ أَنْ أُشْرِكَ بِكَ شَيْـًۭٔا وَأَنَا۠ أَعْلَمُ بِهِۦ وَأَسْتَغْفِرُكَ لِمَا لَآ أَعْلَمُ بِهِۦ تُبْتُ عَنْهُ وَتَبَرَّأْتُ مِنَ ٱلْكُفْرِ وَٱلشِّرْكِ وَٱلْكِذْبِ وَٱلْغِيبَةِ وَٱلْبِدْعَةِ وَٱلنَّمِيمَةِ وَٱلْفَوَٰحِشِ وَٱلْبُهْتَانِ وَٱلْمَعَاصِى كُلِّهَا
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DUÃS -->
-                <div id="duas" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">Duãs Diárias Essenciais</h3>
-
-                    <div class="content-section">
-                        <h4>1. Ao Acordar</h4>
-                        <div class="arabic-text-display">
-                            ٱلْحَمْدُ لِلَّٰهِ ٱلَّذِى أَحْيَانَا بَعْدَ مَآ أَمَاتَنَا وَإِلَيْهِ ٱلنُّشُورُ
-                        </div>
-                        <p>"Louvado seja Allah que nos deu a vida depois de nos ter dado a morte."</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>2. Antes de Dormir</h4>
-                        <div class="arabic-text-display">
-                            بِسْمِكَ ٱللَّٰهُمَّ أَمُوتُ وَأَحْيَا
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>3. Antes de Comer</h4>
-                        <div class="arabic-text-display">
-                            بِسْمِ ٱللَّٰهِ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>4. Após Comer</h4>
-                        <div class="arabic-text-display">
-                            ٱلْحَمْدُ لِلَّٰهِ ٱلَّذِىٓ أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مِنَ ٱلْمُسْلِمِينَ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>5. Ao Entrar em Casa</h4>
-                        <div class="arabic-text-display">
-                            ٱلسَّلَٰمُ عَلَيْنَا وَعَلَىٰ عِبَادِ ٱللَّٰهِ ٱلصَّٰلِحِينَ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>6. Ao Sair de Casa</h4>
-                        <div class="arabic-text-display">
-                            بِسْمِ ٱللَّٰهِ تَوَكَّلْتُ عَلَى ٱللَّٰهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّٰهِ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>7. Antes do Banheiro</h4>
-                        <div class="arabic-text-display">
-                            ٱللَّٰهُمَّ إِنِّىٓ أَعُوذُ بِكَ مِنَ ٱلْخُبُثِ وَٱلْخَبَٰٓئِثِ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>8. Após o Banheiro</h4>
-                        <div class="arabic-text-display">
-                            غُفْرَانَكَ ٱلْحَمْدُ لِلَّٰهِ ٱلَّذِىٓ أَذْهَبَ عَنِّى ٱلْأَذَىٰ وَعَافَانِى
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>9. Para os Pais</h4>
-                        <div class="arabic-text-display">
-                            رَّبِّ ٱرْحَمْهُمَا كَمَا رَبَّيَانِى صَغِيرًۭا
-                        </div>
-                        <p>"Meu Senhor, tem misericórdia deles como eles me criaram pequeno."</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>10. Ao Ouvir Trovão</h4>
-                        <div class="arabic-text-display">
-                            سُبْحَٰنَ ٱلَّذِى يُسَبِّحُ ٱلرَّعْدُ بِحَمْدِهِۦ وَٱلْمَلَٰٓئِكَةُ مِنْ خِيفَتِهِۦ
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SALAT -->
-                <div id="salat" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">Como Realizar a Salat</h3>
-
-                    <div class="content-section">
-                        <h4>1. Wudu (Purificação)</h4>
-                        <ul>
-                            <li>Intenção (Niyyah)</li>
-                            <li>Dizer "Bismillah"</li>
-                            <li>Lavar mãos 3x</li>
-                            <li>Enxaguar boca e nariz 3x</li>
-                            <li>Lavar rosto 3x (orelha a orelha)</li>
-                            <li>Lavar braços até cotovelos 3x</li>
-                            <li>Passar mão na cabeça (masah)</li>
-                            <li>Passar nas orelhas</li>
-                            <li>Lavar pés até tornozelos 3x</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>2. Takbir - Início</h4>
-                        <div class="arabic-text-display" style="font-size: 2rem;">
-                            ٱللَّٰهُ أَكْبَرُ
-                        </div>
-                        <p>Levantar mãos aos ombros, mãos direita sobre esquerda no peito</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>3. Surat Al-Fatiha (Obrigatória)</h4>
-                        <div class="arabic-text-display" style="font-size: 1.3rem;">
-                            بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ۝ ٱلْحَمْدُ لِلَّٰهِ رَبِّ ٱلْعَٰلَمِينَ ۝ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ۝ مَٰلِكِ يَوْمِ ٱلدِّينِ ۝ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝ ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ ۝ صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>4. Surah Adicional (ex: Al-Ikhlas)</h4>
-                        <div class="arabic-text-display" style="font-size: 1.3rem;">
-                            قُلْ هُوَ ٱللَّٰهُ أَحَدٌ ۝ ٱللَّٰهُ ٱلصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>5. Ruku (Inclinação)</h4>
-                        <div class="arabic-text-display">
-                            سُبْحَانَ رَبِّىَ ٱلْعَظِيمِ
-                        </div>
-                        <p>Repetir 3x, segurar joelhos, costas retas</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>6. Qawmah (Levantar)</h4>
-                        <div class="arabic-text-display">
-                            سَمِعَ ٱللَّٰهُ لِمَنْ حَمِدَهُۥ ۝ رَبَّنَا وَلَكَ ٱلْحَمْدُ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>7. Sujud (Prostração)</h4>
-                        <div class="arabic-text-display">
-                            سُبْحَانَ رَبِّىَ ٱلْأَعْلَىٰ
-                        </div>
-                        <p>Testa, nariz, palmas, joelhos e dedos dos pés no chão. Repetir 3x.</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>8. Jalsa (Entre os Sujud)</h4>
-                        <div class="arabic-text-display">
-                            ٱللَّٰهُمَّ ٱغْفِرْ لِى وَارْحَمْنِى وَٱجْبُرْنِى وَٱهْدِنِى وَٱرْزُقْنِى
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>9. Tashahhud (Sentado)</h4>
-                        <div class="arabic-text-display" style="font-size: 1.2rem;">
-                            ٱلتَّحِيَّٰتُ لِلَّٰهِ وَٱلصَّلَوَٰتُ وَٱلطَّيِّبَٰتُ ۝ ٱلسَّلَامُ عَلَيْكَ أَيُّهَا ٱلنَّبِىُّ وَرَحْمَةُ ٱللَّٰهِ وَبَرَكَٰتُهُۥ ۝ ٱلسَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ ٱللَّٰهِ ٱلصَّٰلِحِينَ ۝ أَشْهَدُ أَنْ لَّآ إِلَٰهَ إِلَّا ٱللَّٰهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُۥ وَرَسُولُهُۥ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>10. Durood Ibrahim</h4>
-                        <div class="arabic-text-display" style="font-size: 1.1rem;">
-                            ٱللَّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍۢ وَعَلَىٰٓ ءَالِ مُحَمَّدٍۢ كَمَا صَلَّيْتَ عَلَىٰٓ إِبْرَٰهِيمَ وَعَلَىٰٓ ءَالِ إِبْرَٰهِيمَ إِنَّكَ حَمِيدٌۭ مَّجِيدٌۭ ۝ ٱللَّٰهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍۢ وَعَلَىٰٓ ءَالِ مُحَمَّدٍۢ كَمَا بَارَكْتَ عَلَىٰٓ إِبْرَٰهِيمَ وَعَلَىٰٓ ءَالِ إِبْرَٰهِيمَ إِنَّكَ حَمِيدٌۭ مَّجِيدٌۭ
-                        </div>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>11. Taslim (Encerramento)</h4>
-                        <div class="arabic-text-display">
-                            ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّٰهِ
-                        </div>
-                        <p>Virar cabeça para direita, depois esquerda</p>
-                    </div>
-                </div>
-
-                <!-- ADAB -->
-                <div id="adab" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">Adab (Boas Maneiras)</h3>
-
-                    <div class="content-section">
-                        <h4>Adab com Allah</h4>
-                        <ul>
-                            <li>Lembrar de Allah em todas as situações</li>
-                            <li>Agradecer (Alhamdulillah) nas bênçãos</li>
-                            <li>Paciência (Sabr) nas dificuldades</li>
-                            <li>Manter orações no tempo certo</li>
-                            <li>Evitar palavrões e mentiras</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Adab com os Pais</h4>
-                        <ul>
-                            <li>Obediência em tudo que não é pecado</li>
-                            <li>Falar com gentileza e voz suave</li>
-                            <li>Nunca dizer "uf" (expressão de irritação)</li>
-                            <li>Cuidar deles na velhice</li>
-                            <li>Orar por eles após a morte</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Adab com Irmãos Muçulmanos</h4>
-                        <ul>
-                            <li>Dar Salam primeiro</li>
-                            <li>Apertar mão com ambas as mãos</li>
-                            <li>Visitar o doente</li>
-                            <li>Acompanhar funeral</li>
-                            <li>Manter segredos (Amanah)</li>
-                            <li>Não fofocar (Ghibah)</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Adab na Mesa</h4>
-                        <ul>
-                            <li>Lavar mãos antes</li>
-                            <li>Dizer Bismillah antes, Alhamdulillah depois</li>
-                            <li>Comer com mão direita</li>
-                            <li>Não soprar na comida</li>
-                            <li>Não reclamar da comida</li>
-                            <li>Limpar os dedos após comer</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Adab no Banheiro</h4>
-                        <ul>
-                            <li>Entrar com pé esquerdo</li>
-                            <li>Dizer duã de proteção ao entrar</li>
-                            <li>Não falar dentro</li>
-                            <li>Usar mão esquerda para limpeza</li>
-                            <li>Sair com pé direito</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- HADITH -->
-                <div id="hadith" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">40 Hadiths de An-Nawawi (Seleção)</h3>
-
-                    <div class="content-section">
-                        <h4>Hadith 1: Intenções</h4>
-                        <p>"As ações são julgadas apenas pelas intenções, e cada pessoa terá o que pretendeu."</p>
-                        <p><em>Lição: A importância da sinceridade (Ikhlas).</em></p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Hadith 2: Islam, Iman e Ihsan</h4>
-                        <p><strong>Islam:</strong> 5 pilares (Shahada, Salat, Zakat, Sawm, Hajj)</p>
-                        <p><strong>Iman:</strong> Acreditar em Allah, anjos, livros, mensageiros, Último Dia, Qadar</p>
-                        <p><strong>Ihsan:</strong> Adorar Allah como se O visse</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Hadith 16: Proibições</h4>
-                        <p>"Não envidieis, não façais lances sobre outros, não odieis, não vos afasteis, não façais intrigas. Sede irmãos."</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Hadith 18: Temor a Allah</h4>
-                        <p>"Temei a Allah onde quer que estejais, sigam um mau ato com um bom, e tratem as pessoas com bom caráter."</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Hadith 19: Controle da Língua</h4>
-                        <p>"Quem crê em Allah e no Último Dia, diga o que é bom ou fique calado."</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Hadith 24: Sete Destruidores</h4>
-                        <p>"Evitem: associar parceiros a Allah, magia, matar sem justiça, comer juros, comer dinheiro do órfão, fugir da batalha, acusar mulheres virtuosas."</p>
-                    </div>
-                </div>
-
-                <!-- FIQ -->
-                <div id="fiq" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">Fiq (Jurisprudência) - Nível 1</h3>
-
-                    <div class="content-section">
-                        <h4>Tahara (Purificação)</h4>
-                        <p><strong>Águas permitidas:</strong> Chuva, rios, mares, poços (que mantêm cor, cheiro, gosto)</p>
-                        <p><strong>Najasah (Impuridades):</strong> Urina, fezes, sangue menstrual, carne de porco, álcool</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Wudu (Ablução Menor)</h4>
-                        <p><strong>Obrigatório:</strong> Rosto, braços até cotovelos, cabeça (1/4), pés até tornozelos</p>
-                        <p><strong>Sunnah:</strong> Intenção, Bismillah, lavar mãos 3x, boca, nariz</p>
-                        <p><strong>Quebra Wudu:</strong> Descargas, sono profundo, perda de sentidos, tocar partes privadas</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Ghusl (Banho Ritual)</h4>
-                        <p><strong>Obrigatório quando:</strong> Ejaculação, relação sexual, fim da menstruação, pós-parto</p>
-                        <p><strong>Como fazer:</strong> Intenção, lavar mãos, genitais, Wudu (sem pés), água na cabeça 3x, corpo inteiro, pés</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Salat (Oração)</h4>
-                        <p><strong>Condições:</strong> Islam, sanidade, puberdade, purificação, cobrir Awrah, tempo correto, Qibla, intenção</p>
-                        <p><strong>Pilares:</strong> Qiyam, Al-Fatiha, Ruku, I'tidal, Sujud, Jalsa, Tashahhud, Taslim</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Zakat (Caridade Obrigatória)</h4>
-                        <p><strong>Nisab:</strong> 85g de ouro ou equivalente</p>
-                        <p><strong>Taxa:</strong> 2.5% sobre dinheiro, ouro, prata, mercadorias</p>
-                        <p><strong>Quem recebe:</strong> 8 categorias (pobres, necessitados, administradores, etc.)</p>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Sawm (Jejum)</h4>
-                        <p><strong>Obrigatório:</strong> Ramadan, para quem é adulto, são, residente</p>
-                        <p><strong>Invalida:</strong> Comer/beber intencional, relação sexual, ejaculação intencional, menstruação</p>
-                        <p><strong>Não invalida:</strong> Esquecimento, vômito involuntário, saliva</p>
-                    </div>
-                </div>
-
-                <!-- SIRAT -->
-                <div id="sirat" class="lesson-tab">
-                    <h3 style="color: var(--primary-green);">Sirat An-Nabi (Vida do Profeta)</h3>
-
-                    <div class="content-section">
-                        <h4>Antes do Nascimento</h4>
-                        <ul>
-                            <li>Arábia pré-islâmica: politeísmo, tribalismo</li>
-                            <li>Ka'bah construída por Ibrahim</li>
-                            <li>Ano do Elefante (570 d.C.): Abraha derrotado</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Nascimento e Infância (570-576)</h4>
-                        <ul>
-                            <li>Nascimento: 12 Rabi' Al-Awwal, Ano do Elefante</li>
-                            <li>Pai: Abdullah (falecido antes do nascimento)</li>
-                            <li>Mãe: Aminah bint Wahb</li>
-                            <li>Amamentação: Halimah As-Sa'diyah</li>
-                            <li>Morte da mãe: aos 6 anos</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Juventude (576-595)</h4>
-                        <ul>
-                            <li>Pastor de ovelhas</li>
-                            <li>Comerciante (caravanas para Síria)</li>
-                            <li>Reputação de "Al-Amin" (o Confiável)</li>
-                            <li>Conserto da Ka'bah</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Casamento com Khadijah (595)</h4>
-                        <ul>
-                            <li>Khadijah: viúva rica, comerciante</li>
-                            <li>Idade: Ele 25, ela 40</li>
-                            <li>25 anos de casamento feliz</li>
-                            <li>Filhos: Qasim, Zaynab, Ruqayyah, Umm Kulthum, Fatimah, Abdullah</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Primeira Revelação (610)</h4>
-                        <ul>
-                            <li>Caverna de Hira, Ramadan</li>
-                            <li>Anjo Gabriel: "Iqra'!" (Lê!)</li>
-                            <li>Surat Al-Alaq (96:1-5)</li>
-                            <li>Conforto de Khadijah e Waraqah</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Período de Makkah (610-622)</h4>
-                        <ul>
-                            <li>3 anos de chamada secreta</li>
-                            <li>Primeiros convertidos: Ali, Abu Bakr, Zayd</li>
-                            <li>Dar Al-Arqam (casa de Arqam)</li>
-                            <li>Perseguição e boycott</li>
-                            <li>Isra e Mi'raj (viagem noturna)</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Hijrah para Madinah (622)</h4>
-                        <ul>
-                            <li>Conspiração para assassinato</li>
-                            <li>Fuga com Abu Bakr</li>
-                            <li>Caverna de Thawr</li>
-                            <li>Constituição de Madinah</li>
-                            <li>Início do calendário islâmico</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Período de Madinah (622-632)</h4>
-                        <ul>
-                            <li>Batalha de Badr (624) - vitória</li>
-                            <li>Batalha de Uhud (625) - lição de obediência</li>
-                            <li>Trincheira (627) - proteção divina</li>
-                            <li>Acordo de Hudaybiyyah (628)</li>
-                            <li>Conquista de Makkah (630)</li>
-                        </ul>
-                    </div>
-
-                    <div class="content-section">
-                        <h4>Falecimento (632)</h4>
-                        <ul>
-                            <li>Hajjat Al-Wada' (peregrinação de despedida)</li>
-                            <li>Sermão de despedida no Monte Arafah</li>
-                            <li>Doença final (febre)</li>
-                            <li>Falecimento: 12 Rabi' Al-Awwal, 11 AH</li>
-                            <li>Enterro em sua casa (Mesquita do Profeta)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Schedule Section -->
-        <section id="schedule" class="section-content hidden">
-            <div class="schedule-section">
-                <h2 class="section-title">Horários de Aula</h2>
-                <p style="text-align: center; margin-bottom: 2rem;">
-                    Escolha um dos três horários disponíveis. Aulas de 45 minutos, de Segunda a Sexta.<br>
-                    Sábados: Testes (1h30) | Domingos: Revisão e notas às 12:30
-                </p>
-                <div class="time-slots">
-                    <div class="time-slot" onclick="selectTime(this, '09:30')">
-                        <h4>09:30</h4>
-                        <p>Manhã</p>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '14:30')">
-                        <h4>14:30</h4>
-                        <p>Tarde</p>
-                    </div>
-                    <div class="time-slot" onclick="selectTime(this, '20:30')">
-                        <h4>20:30</h4>
-                        <p>Noite</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Student Dashboard -->
-        <section id="dashboard" class="dashboard">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <div>
-                    <h2 style="font-family: 'Amiri', serif; color: var(--primary-green);">Meu Painel</h2>
-                    <p>Bem-vindo, <span id="dashboardUserName"></span></p>
-                </div>
-                <span class="status-badge status-pending" id="approvalStatus">Aguardando</span>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4 id="lessonsCompleted">0</h4>
-                    <p>Aulas</p>
-                </div>
-                <div class="stat-card">
-                    <h4 id="testsTaken">0</h4>
-                    <p>Testes</p>
-                </div>
-                <div class="stat-card">
-                    <h4 id="averageScore">0%</h4>
-                    <p>Média</p>
-                </div>
-                <div class="stat-card">
-                    <h4 id="currentStreak">0</h4>
-                    <p>Dias</p>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px;">
-                <h3 style="margin-bottom: 1rem; color: var(--primary-green);">Progresso do Curso</h3>
-                <div id="courseTimeline"></div>
+            <div class="module-card animate">
+                <div class="module-header">
+                    <div class="module-number">03</div>
+                    <h3>Palavras do Alcorão</h3>
+                    <p>Vocabulário essencial</p>
+                </div>
+                <div class="module-content">
+                    <ul class="lesson-list">
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">1</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Nomes de Deus</div>
+                                <div class="lesson-duration">25 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">2</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Palavras de Surat Al-Fatiha</div>
+                                <div class="lesson-duration">30 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">3</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Palavras Comuns</div>
+                                <div class="lesson-duration">20 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                        <li class="lesson-item" onclick="toggleLesson(this)">
+                            <div class="lesson-icon">4</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">Leitura de Versículos</div>
+                                <div class="lesson-duration">30 minutos</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="color: #ddd;"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="section" id="avaliacoes" style="background: white;">
+        <div class="section-title animate">
+            <h2>Avaliações Interativas</h2>
+            <p>Teste seus conhecimentos e acompanhe seu progresso</p>
+        </div>
+
+        <div class="quiz-container animate">
+            <div class="quiz-header">
+                <h3>Quiz: Identificação de Letras</h3>
+                <p>Selecione a resposta correta para cada questão</p>
             </div>
 
-            <div style="margin-top: 2rem; text-align: center;">
-                <button class="btn" onclick="startLesson()" id="startLessonBtn" disabled>Iniciar Aula</button>
-                <button class="btn btn-secondary" onclick="viewGrades()">Ver Notas</button>
+            <div class="quiz-progress" id="quizProgress">
+                <div class="quiz-dot active"></div>
+                <div class="quiz-dot"></div>
+                <div class="quiz-dot"></div>
+                <div class="quiz-dot"></div>
+                <div class="quiz-dot"></div>
             </div>
-        </section>
 
-        <!-- Test Section -->
-        <section id="testSection" class="test-section">
-            <div class="test-timer" id="testTimer">90:00</div>
-            <h2 style="text-align: center; color: var(--primary-green);">Teste Semanal</h2>
-            <div id="questionsContainer"></div>
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="btn btn-success" onclick="submitTest()">Finalizar Teste</button>
+            <div id="quizContent">
+                <div class="question-box">
+                    <div class="question-text">Qual é o nome desta letra?</div>
+                    <div class="arabic-question" id="questionLetter">ب</div>
+                    <div class="audio-player">
+                        <button class="play-btn" onclick="playAudio()">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <span>Ouvir pronúncia</span>
+                    </div>
+                </div>
+
+                <div class="options-grid" id="optionsGrid">
+                    <button class="option-btn" onclick="checkAnswer(this, 'Ba')">Ba</button>
+                    <button class="option-btn" onclick="checkAnswer(this, 'Ta')">Ta</button>
+                    <button class="option-btn" onclick="checkAnswer(this, 'Tha')">Tha</button>
+                    <button class="option-btn" onclick="checkAnswer(this, 'Nun')">Nun</button>
+                </div>
             </div>
-        </section>
 
-        <!-- ADMIN PANEL - PROTEGIDO COM LOGIN WALL -->
-        <section id="adminPanel" class="admin-panel">
+            <div class="quiz-results" id="quizResults">
+                <h3>Avaliação Completa!</h3>
+                <div class="score-circle" style="--score: 0">
+                    <div class="score-text" id="scoreText">0%</div>
+                </div>
+                <p id="resultMessage">Continue praticando!</p>
+                <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 2rem;">
+                    Tentar Novamente
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contacto">
+        <div class="section-title animate" style="color: white;">
+            <h2 style="color: white;">Entre em Contacto</h2>
+            <p style="color: rgba(255,255,255,0.8);">Estamos aqui para ajudar na sua jornada de aprendizado</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-card animate">
+                <div class="contact-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="contact-info">
+                    <h3>WhatsApp</h3>
+                    <p>860407269</p>
+                </div>
+            </div>
             
-            <!-- TELA DE LOGIN DO ADMIN (inicialmente visível) -->
-            <div id="adminLoginWall" class="admin-login-wall">
-                <h2>🔒 Área Administrativa</h2>
-                <p>Esta área é restrita ao administrador do sistema.</p>
-                
-                <div class="security-notice">
-                    <strong>⚠️ Aviso de Segurança:</strong><br>
-                    Tentativas de acesso não autorizado são registradas.<br>
-                    Após 3 tentativas falhas, o acesso será bloqueado por 30 minutos.
+            <div class="contact-card animate">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
                 </div>
-
-                <div class="form-group" style="max-width: 300px; margin: 2rem auto;">
-                    <label>Telefone Administrador</label>
-                    <input type="tel" id="adminPhoneInput" placeholder="860407269" value="860407269" style="text-align: center;">
-                </div>
-
-                <div class="form-group" style="max-width: 300px; margin: 0 auto 2rem auto;">
-                    <label>PIN de Segurança (4 dígitos)</label>
-                    <input type="password" id="adminPinInput" class="pin-input" maxlength="4" placeholder="••••" style="text-align: center; letter-spacing: 0.5rem;">
-                </div>
-
-                <button class="btn" onclick="verifyAdminAccess()" style="width: 200px;">Acessar Painel</button>
-                
-                <p style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
-                    Esqueceu o PIN? Contacte: Anacleto Bebane<br>
-                    WhatsApp: 860407269
-                </p>
-            </div>
-
-            <!-- CONTEÚDO DO ADMIN (inicialmente escondido) -->
-            <div id="adminContent" class="admin-data-hidden">
-                <div class="admin-header">
-                    <div>
-                        <h2>🛡️ Painel Administrativo</h2>
-                        <p style="margin: 0; opacity: 0.9;">Administrador: Anacleto Bebane | Tel: 860407269</p>
-                    </div>
-                    <button class="admin-logout-btn" onclick="adminLogout()">🔒 Encerrar Sessão Admin</button>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4 id="pendingCount">0</h4>
-                        <p>Pendentes</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4 id="approvedCount">0</h4>
-                        <p>Aprovados</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4 id="totalStudents">0</h4>
-                        <p>Total</p>
-                    </div>
-                    <div class="stat-card">
-                        <h4 id="testsToGrade">0</h4>
-                        <p>Testes</p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 2rem;">
-                    <h3 style="color: var(--primary-green); margin-bottom: 1rem;">Alunos Pendentes de Aprovação</h3>
-                    <div style="overflow-x: auto;">
-                        <table id="pendingTable">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>País</th>
-                                    <th>Província</th>
-                                    <th>Horário</th>
-                                    <th>Data</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pendingTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div style="margin-top: 3rem;">
-                    <h3 style="color: var(--primary-green); margin-bottom: 1rem;">Todos os Alunos</h3>
-                    <div style="overflow-x: auto;">
-                        <table id="allStudentsTable">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>Horário</th>
-                                    <th>Progresso</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="allStudentsBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div style="margin-top: 3rem; background: var(--light-bg); padding: 2rem; border-radius: 15px;">
-                    <h3 style="margin-bottom: 1rem; color: var(--primary-green);">⚡ Ações Administrativas</h3>
-                    <p style="margin-bottom: 1rem; font-size: 0.9rem;">Estas ações permitem violar regras de tempo para testes:</p>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button class="btn" onclick="adminSkipLesson()">Pular para Próxima Aula</button>
-                        <button class="btn btn-secondary" onclick="adminForceTest()">Forçar Teste Imediato</button>
-                        <button class="btn btn-success" onclick="adminViewAllGrades()">Ver Todas as Notas</button>
-                    </div>
+                <div class="contact-info">
+                    <h3>Telefone</h3>
+                    <p>+258 86 040 7269</p>
                 </div>
             </div>
-        </section>
 
-    </div>
-
-    <!-- Modals -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('registerModal')">&times;</button>
-            <h2 style="text-align: center; color: var(--primary-green); margin-bottom: 1.5rem;">Inscrição</h2>
-            <form id="registerForm" onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label>Nome Completo *</label>
-                    <input type="text" id="regName" required>
+            <div class="contact-card animate">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Telefone *</label>
-                        <input type="tel" id="regPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>País *</label>
-                        <select id="regCountry" required>
-                            <option value="Moçambique" selected>Moçambique</option>
-                            <option value="Portugal">Portugal</option>
-                            <option value="Brasil">Brasil</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-                    </div>
+                <div class="contact-info">
+                    <h3>Email</h3>
+                    <p>Islammocambique@gmail.com</p>
                 </div>
-                <div class="form-group">
-                    <label>Província *</label>
-                    <input type="text" id="regProvince" required>
-                </div>
-                <div class="form-group">
-                    <label>Horário *</label>
-                    <select id="regTime" required>
-                        <option value="09:30">09:30</option>
-                        <option value="14:30">14:30</option>
-                        <option value="20:30">20:30</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Senha *</label>
-                    <input type="password" id="regPassword" required>
-                </div>
-                <button type="submit" class="btn" style="width: 100%;">Inscrever-se</button>
-            </form>
+            </div>
         </div>
-    </div>
 
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
-            <h2 style="text-align: center; color: var(--primary-green); margin-bottom: 1.5rem;">Entrar</h2>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Telefone</label>
-                    <input type="text" id="loginPhone" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <div class="form-group">
-                    <label><input type="checkbox" id="isAdmin"> Sou Administrador</label>
-                </div>
-                <button type="submit" class="btn" style="width: 100%;">Entrar</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- WhatsApp -->
-    <a href="https://wa.me/258860407269?text=Tenho%20uma%20dúvida%20web%20madrassa%201º%20nível" target="_blank" class="whatsapp-btn">
-        💬
-    </a>
+        <a href="https://wa.me/258860407269" class="whatsapp-btn animate" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            Falar no WhatsApp Agora
+        </a>
+    </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="footer-content">
-            <h3>Islam Moçambique</h3>
-            <p>Madrassa Online Nível 1 - Noorani Qaida</p>
-            <div style="margin-top: 1rem;">
-                <p>📱 +258 860407269 | 📧 Islammocambique@gmail.com</p>
+            <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
+                <i class="fas fa-mosque" style="color: var(--secondary);"></i>
+                <span>Islam Moçambique</span>
             </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p>&copy; 2026 Islam Moçambique. Todos os direitos reservados.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+                بسم الله الرحمن الرحيم
+            </p>
         </div>
     </footer>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDummyKeyForDemo",
-            authDomain: "madrassa-online-b851c.firebaseapp.com",
-            databaseURL: "https://madrassa-online-b851c-default-rtdb.firebaseio.com",
-            projectId: "madrassa-online-b851c",
-            storageBucket: "madrassa-online-b851c.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+        // Arabic Alphabet Data
+        const alphabet = [
+            { letter: 'ا', name: 'Alif', transliteration: 'aa', sound: 'a' },
+            { letter: 'ب', name: 'Ba', transliteration: 'b', sound: 'b' },
+            { letter: 'ت', name: 'Ta', transliteration: 't', sound: 't' },
+            { letter: 'ث', name: 'Tha', transliteration: 'th', sound: 'th' },
+            { letter: 'ج', name: 'Jim', transliteration: 'j', sound: 'j' },
+            { letter: 'ح', name: 'Ha', transliteration: 'h', sound: 'h' },
+            { letter: 'خ', name: 'Kha', transliteration: 'kh', sound: 'kh' },
+            { letter: 'د', name: 'Dal', transliteration: 'd', sound: 'd' },
+            { letter: 'ذ', name: 'Dhal', transliteration: 'dh', sound: 'dh' },
+            { letter: 'ر', name: 'Ra', transliteration: 'r', sound: 'r' },
+            { letter: 'ز', name: 'Zay', transliteration: 'z', sound: 'z' },
+            { letter: 'س', name: 'Sin', transliteration: 's', sound: 's' },
+            { letter: 'ش', name: 'Shin', transliteration: 'sh', sound: 'sh' },
+            { letter: 'ص', name: 'Sad', transliteration: 's', sound: 's' },
+            { letter: 'ض', name: 'Dad', transliteration: 'd', sound: 'd' },
+            { letter: 'ط', name: 'Ta', transliteration: 't', sound: 't' },
+            { letter: 'ظ', name: 'Zha', transliteration: 'z', sound: 'z' },
+            { letter: 'ع', name: 'Ayn', transliteration: "'", sound: "'" },
+            { letter: 'غ', name: 'Ghayn', transliteration: 'gh', sound: 'gh' },
+            { letter: 'ف', name: 'Fa', transliteration: 'f', sound: 'f' },
+            { letter: 'ق', name: 'Qaf', transliteration: 'q', sound: 'q' },
+            { letter: 'ك', name: 'Kaf', transliteration: 'k', sound: 'k' },
+            { letter: 'ل', name: 'Lam', transliteration: 'l', sound: 'l' },
+            { letter: 'م', name: 'Mim', transliteration: 'm', sound: 'm' },
+            { letter: 'ن', name: 'Nun', transliteration: 'n', sound: 'n' },
+            { letter: 'ه', name: 'Ha', transliteration: 'h', sound: 'h' },
+            { letter: 'و', name: 'Waw', transliteration: 'w', sound: 'w' },
+            { letter: 'ي', name: 'Ya', transliteration: 'y', sound: 'y' }
+        ];
+
+        // Quiz Data
+        const quizData = [
+            { question: 'ب', correct: 'Ba', options: ['Ba', 'Ta', 'Tha', 'Nun'] },
+            { question: 'م', correct: 'Mim', options: ['Mim', 'Nun', 'Lam', 'Ba'] },
+            { question: 'ا', correct: 'Alif', options: ['Lam', 'Alif', 'Ba', 'Ya'] },
+            { question: 'ر', correct: 'Ra', options: ['Zay', 'Dal', 'Ra', 'Dhal'] },
+            { question: 'س', correct: 'Sin', options: ['Shin', 'Sin', 'Sad', 'Ba'] }
+        ];
+
+        let currentQuiz = 0;
+        let score = 0;
+        let learnedLetters = new Set();
+
+        // Initialize Alphabet Grid
+        function initAlphabet() {
+            const grid = document.getElementById('alphabetGrid');
+            alphabet.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'letter-card';
+                card.innerHTML = `
+                    <span class="arabic-letter">${item.letter}</span>
+                    <div class="letter-name">${item.name}</div>
+                    <div class="letter-transliteration">${item.transliteration}</div>
+                `;
+                card.onclick = () => toggleLearned(card, item.name);
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleLearned(card, letterName) {
+            card.classList.toggle('learned');
+            if (card.classList.contains('learned')) {
+                learnedLetters.add(letterName);
+                playAudio();
+            } else {
+                learnedLetters.delete(letterName);
+            }
+            updateProgress();
+            checkBadges();
+        }
+
+        function updateProgress() {
+            const percent = Math.round((learnedLetters.size / alphabet.length) * 100);
+            document.getElementById('mainProgress').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('lessonsCompleted').textContent = learnedLetters.size;
+            
+            // Save to localStorage
+            localStorage.setItem('learnedLetters', JSON.stringify([...learnedLetters]));
+        }
+
+        function checkBadges() {
+            const badges = document.querySelectorAll('.badge');
+            const count = learnedLetters.size;
+            
+            if (count >= 7) badges[1].classList.add('unlocked');
+            if (count >= 14) badges[2].classList.add('unlocked');
+            if (count >= 28) badges[3].classList.add('unlocked');
+        }
+
+        // Quiz Functions
+        function loadQuestion() {
+            if (currentQuiz >= quizData.length) {
+                showResults();
+                return;
+            }
+            
+            const q = quizData[currentQuiz];
+            document.getElementById('questionLetter').textContent = q.question;
+            
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            
+            // Shuffle options
+            const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = function() { checkAnswer(this, opt); };
+                optionsGrid.appendChild(btn);
+            });
+            
+            updateQuizProgress();
+        }
+
+        function checkAnswer(btn, answer) {
+            const correct = quizData[currentQuiz].correct;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach(b => {
+                b.disabled = true;
+                if (b.textContent === correct) {
+                    b.classList.add('correct');
+                }
+            });
+            
+            if (answer === correct) {
+                score++;
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+            }
+            
+            // Update dot
+            const dots = document.querySelectorAll('.quiz-dot');
+            if (answer === correct) {
+                dots[currentQuiz].classList.add('correct');
+            } else {
+                dots[currentQuiz].classList.add('wrong');
+            }
+            
+            setTimeout(() => {
+                currentQuiz++;
+                loadQuestion();
+            }, 1500);
+        }
+
+        function updateQuizProgress() {
+            const dots = document.querySelectorAll('.quiz-dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.remove('active');
+                if (idx === currentQuiz) dot.classList.add('active');
+            });
+        }
+
+        function showResults() {
+            document.getElementById('quizContent').style.display = 'none';
+            const results = document.getElementById('quizResults');
+            results.style.display = 'block';
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('scoreText').textContent = percentage + '%';
+            document.querySelector('.score-circle').style.setProperty('--score', percentage);
+            
+            let message = '';
+            if (percentage === 100) message = 'Excelente! Masha Allah! 🌟';
+            else if (percentage >= 80) message = 'Muito bom! Continue assim! ✨';
+            else if (percentage >= 60) message = 'Bom trabalho! Pratique mais! 📚';
+            else message = 'Continue praticando! Você consegue! 💪';
+            
+            document.getElementById('resultMessage').textContent = message;
+            
+            // Update stats
+            document.getElementById('quizzesPassed').textContent = 
+                parseInt(document.getElementById('quizzesPassed').textContent) + 1;
+        }
+
+        function restartQuiz() {
+            currentQuiz = 0;
+            score = 0;
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('quizResults').style.display = 'none';
+            
+            // Reset dots
+            document.querySelectorAll('.quiz-dot').forEach(dot => {
+                dot.classList.remove('correct', 'wrong', 'active');
+            });
+            document.querySelector('.quiz-dot').classList.add('active');
+            
+            loadQuestion();
+        }
+
+        function playAudio() {
+            // Simulate audio feedback
+            const btn = document.querySelector('.play-btn');
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 200);
+        }
+
+        // Lesson Toggle
+        function toggleLesson(item) {
+            item.classList.toggle('completed');
+            const icon = item.querySelector('.lesson-icon');
+            if (item.classList.contains('completed')) {
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+                icon.style.background = 'var(--accent)';
+                icon.style.color = 'white';
+            } else {
+                icon.textContent = icon.parentElement.querySelector('.lesson-title').textContent.match(/\d+/)[0];
+                icon.style.background = '#f0f0f0';
+                icon.style.color = 'var(--primary)';
+            }
+        }
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
         };
 
-        let app, db, auth;
-        let currentUser = null;
-        let isAdmin = false;
-        let adminSessionActive = false;
-        let testTimerInterval;
-        let testTimeRemaining = 90 * 60;
-        let selectedAnswers = {};
-        let adminLoginAttempts = 0;
-        let adminLockoutTime = null;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
 
-        // Admin credentials
-        const ADMIN_PHONE = "860407269";
-        const ADMIN_PIN = "6300";
-        const ADMIN_NAME = "Anacleto Bebane";
+        document.querySelectorAll('.animate').forEach((el) => observer.observe(el));
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                app = firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                auth = firebase.auth();
-                console.log("Firebase conectado");
-            } catch (e) {
-                console.error("Erro Firebase:", e);
-            }
-            
-            checkSession();
+        // Mobile Menu
+        document.querySelector('.mobile-menu').addEventListener('click', () => {
+            const nav = document.querySelector('.nav-links');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
         });
 
-        // Navigation
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
-            document.getElementById('dashboard').classList.remove('active');
-            document.getElementById('adminPanel').classList.remove('active');
-            document.getElementById('testSection').classList.remove('active');
-            
-            if (sectionId === 'dashboard') {
-                if (currentUser) {
-                    document.getElementById('dashboard').classList.add('active');
-                    loadDashboardData();
-                } else {
-                    openModal('loginModal');
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
-            } else if (sectionId === 'admin') {
-                // SEMPRE mostrar o painel admin, mas verificar se está logado
-                document.getElementById('adminPanel').classList.add('active');
-                
-                // Se não estiver logado como admin, mostrar tela de login
-                if (!adminSessionActive) {
-                    document.getElementById('adminLoginWall').style.display = 'block';
-                    document.getElementById('adminContent').classList.add('admin-data-hidden');
-                } else {
-                    // Se já estiver logado, mostrar dados
-                    document.getElementById('adminLoginWall').style.display = 'none';
-                    document.getElementById('adminContent').classList.remove('admin-data-hidden');
-                    loadAdminData();
-                }
-            } else {
-                const section = document.getElementById(sectionId);
-                if (section) section.classList.remove('hidden');
-            }
-            window.scrollTo(0, 0);
-        }
-
-        function showLesson(lessonId) {
-            document.querySelectorAll('.lesson-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.lesson-nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById(lessonId).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        // Modal
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Admin Security Functions
-        function verifyAdminAccess() {
-            const phone = document.getElementById('adminPhoneInput').value;
-            const pin = document.getElementById('adminPinInput').value;
-            
-            // Check lockout
-            if (adminLockoutTime && Date.now() < adminLockoutTime) {
-                const remaining = Math.ceil((adminLockoutTime - Date.now()) / 60000);
-                showAlert(`Acesso bloqueado. Tente novamente em ${remaining} minutos.`, 'danger');
-                return;
-            }
-            
-            // Verify credentials
-            if (phone === ADMIN_PHONE && pin === ADMIN_PIN) {
-                // Success
-                adminSessionActive = true;
-                adminLoginAttempts = 0;
-                isAdmin = true;
-                currentUser = { nome: ADMIN_NAME, telefone: ADMIN_PHONE, role: 'admin' };
-                
-                // Save session with timestamp
-                localStorage.setItem('madrassa_admin_session', JSON.stringify({
-                    timestamp: Date.now(),
-                    phone: phone
-                }));
-                
-                // Hide login wall, show content
-                document.getElementById('adminLoginWall').style.display = 'none';
-                document.getElementById('adminContent').classList.remove('admin-data-hidden');
-                
-                loadAdminData();
-                showAlert('Acesso concedido. Bem-vindo, Administrador.', 'success');
-                
-                // Auto-logout after 30 minutes of inactivity
-                resetAdminTimeout();
-                
-            } else {
-                // Failed
-                adminLoginAttempts++;
-                
-                if (adminLoginAttempts >= 3) {
-                    adminLockoutTime = Date.now() + (30 * 60 * 1000); // 30 minutes
-                    showAlert('Muitas tentativas falhas. Acesso bloqueado por 30 minutos.', 'danger');
-                } else {
-                    showAlert(`PIN incorreto. Tentativa ${adminLoginAttempts} de 3.`, 'warning');
-                }
-                
-                document.getElementById('adminPinInput').value = '';
-            }
-        }
-
-        let adminTimeout;
-        function resetAdminTimeout() {
-            clearTimeout(adminTimeout);
-            adminTimeout = setTimeout(() => {
-                adminLogout();
-                showAlert('Sessão administrativa expirada por inatividade.', 'warning');
-            }, 30 * 60 * 1000); // 30 minutes
-        }
-
-        function adminLogout() {
-            adminSessionActive = false;
-            isAdmin = false;
-            currentUser = null;
-            localStorage.removeItem('madrassa_admin_session');
-            
-            // Reset UI
-            document.getElementById('adminLoginWall').style.display = 'block';
-            document.getElementById('adminContent').classList.add('admin-data-hidden');
-            document.getElementById('adminPinInput').value = '';
-            
-            showSection('home');
-            showAlert('Sessão administrativa encerrada.', 'success');
-        }
-
-        // Check for existing admin session
-        function checkAdminSession() {
-            const session = localStorage.getItem('madrassa_admin_session');
-            if (session) {
-                const data = JSON.parse(session);
-                // Check if less than 30 minutes old
-                if (Date.now() - data.timestamp < 30 * 60 * 1000) {
-                    adminSessionActive = true;
-                    isAdmin = true;
-                    currentUser = { nome: ADMIN_NAME, telefone: ADMIN_PHONE, role: 'admin' };
-                    return true;
-                } else {
-                    localStorage.removeItem('madrassa_admin_session');
-                }
-            }
-            return false;
-        }
-
-        // Registration
-        async function handleRegister(event) {
-            event.preventDefault();
-            
-            const studentData = {
-                nome: document.getElementById('regName').value,
-                telefone: document.getElementById('regPhone').value,
-                pais: document.getElementById('regCountry').value,
-                provincia: document.getElementById('regProvince').value,
-                horario: document.getElementById('regTime').value,
-                senha: document.getElementById('regPassword').value,
-                status: 'pendente',
-                dataInscricao: new Date().toISOString(),
-                progresso: 0,
-                aulasCompletadas: 0,
-                testesRealizados: 0,
-                mediaGeral: 0,
-                notas: []
-            };
-
-            try {
-                if (db) {
-                    const newStudentRef = db.ref('madrassa_nivel1/alunos').push();
-                    await newStudentRef.set(studentData);
-                }
-                
-                let students = JSON.parse(localStorage.getItem('madrassa_students') || '[]');
-                studentData.id = 'local_' + Date.now();
-                students.push(studentData);
-                localStorage.setItem('madrassa_students', JSON.stringify(students));
-                
-                showAlert('Inscrição realizada! Aguarde aprovação do administrador.', 'success');
-                closeModal('registerModal');
-                document.getElementById('registerForm').reset();
-                
-            } catch (error) {
-                showAlert('Erro ao registrar. Tente novamente.', 'danger');
-            }
-        }
-
-        // Login
-        async function handleLogin(event) {
-            event.preventDefault();
-            
-            const phone = document.getElementById('loginPhone').value;
-            const password = document.getElementById('loginPassword').value;
-            const isAdminCheck = document.getElementById('isAdmin').checked;
-            
-            // Admin login via modal (different from admin panel access)
-            if (isAdminCheck) {
-                if (phone === ADMIN_PHONE && password === ADMIN_PIN) {
-                    // Redirect to admin panel with login wall
-                    closeModal('loginModal');
-                    showSection('admin');
-                    return;
-                } else {
-                    showAlert('Credenciais de administrador incorretas.', 'danger');
-                    return;
-                }
-            }
-            
-            // Student login
-            try {
-                let students = JSON.parse(localStorage.getItem('madrassa_students') || '[]');
-                const student = students.find(s => s.telefone === phone && s.senha === password);
-                
-                if (student) {
-                    if (student.status !== 'aprovado') {
-                        showAlert('Conta pendente de aprovação.', 'warning');
-                        return;
-                    }
-                    
-                    currentUser = student;
-                    isAdmin = false;
-                    
-                    localStorage.setItem('madrassa_session', JSON.stringify({
-                        user: currentUser,
-                        isAdmin: false,
-                        timestamp: Date.now()
-                    }));
-                    
-                    updateUIForUser();
-                    closeModal('loginModal');
-                    showAlert(`Bem-vindo, ${student.nome}!`, 'success');
-                    showSection('dashboard');
-                } else {
-                    showAlert('Telefone ou senha incorretos.', 'danger');
-                }
-            } catch (error) {
-                showAlert('Erro ao fazer login.', 'danger');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            isAdmin = false;
-            localStorage.removeItem('madrassa_session');
-            updateUIForUser();
-            showSection('home');
-            showAlert('Sessão encerrada.', 'success');
-        }
-
-        function checkSession() {
-            // Check student session
-            const session = localStorage.getItem('madrassa_session');
-            if (session) {
-                const data = JSON.parse(session);
-                if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
-                    currentUser = data.user;
-                    isAdmin = data.isAdmin;
-                    updateUIForUser();
-                } else {
-                    localStorage.removeItem('madrassa_session');
-                }
-            }
-            
-            // Check admin session (for panel access)
-            checkAdminSession();
-        }
-
-        function updateUIForUser() {
-            const loginLink = document.getElementById('loginLink');
-            const registerLink = document.getElementById('registerLink');
-            const userInfo = document.getElementById('userInfo');
-            
-            if (currentUser && !isAdmin) {
-                loginLink.classList.add('hidden');
-                registerLink.classList.add('hidden');
-                userInfo.classList.remove('hidden');
-                document.getElementById('userName').textContent = currentUser.nome || currentUser.name;
-                document.getElementById('userAvatar').textContent = (currentUser.nome || currentUser.name).charAt(0).toUpperCase();
-            } else {
-                loginLink.classList.remove('hidden');
-                registerLink.classList.remove('hidden');
-                userInfo.classList.add('hidden');
-            }
-        }
-
-        // Dashboard functions
-        function loadDashboardData() {
-            if (!currentUser || isAdmin) return;
-            
-            document.getElementById('dashboardUserName').textContent = currentUser.nome;
-            document.getElementById('lessonsCompleted').textContent = currentUser.aulasCompletadas || 0;
-            document.getElementById('testsTaken').textContent = currentUser.testesRealizados || 0;
-            document.getElementById('averageScore').textContent = (currentUser.mediaGeral || 0) + '%';
-            document.getElementById('currentStreak').textContent = currentUser.streak || 0;
-            
-            const statusBadge = document.getElementById('approvalStatus');
-            if (currentUser.status === 'aprovado') {
-                statusBadge.textContent = 'Aprovado';
-                statusBadge.className = 'status-badge status-approved';
-                document.getElementById('startLessonBtn').disabled = false;
-            } else {
-                statusBadge.textContent = 'Pendente';
-                statusBadge.className = 'status-badge status-pending';
-                document.getElementById('startLessonBtn').disabled = true;
-            }
-            
-            const today = new Date().getDay();
-            if (today === 6) {
-                checkForTest();
-            }
-        }
-
-        function startLesson() {
-            // Check time slot
-            const now = new Date();
-            const allowedTimes = ['09:30', '14:30', '20:30'];
-            let canStart = isAdmin;
-            
-            if (!canStart) {
-                for (let time of allowedTimes) {
-                    const [h, m] = time.split(':').map(Number);
-                    const slotMinutes = h * 60 + m;
-                    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-                    if (Math.abs(currentMinutes - slotMinutes) <= 30) {
-                        canStart = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (!canStart) {
-                showAlert('Aulas disponíveis apenas às 9:30, 14:30 ou 20:30', 'warning');
-                return;
-            }
-            
-            const today = now.toISOString().split('T')[0];
-            if (currentUser.ultimaAula === today && !isAdmin) {
-                showAlert('Você já completou a aula de hoje.', 'warning');
-                return;
-            }
-            
-            showAlert('Iniciando aula...', 'success');
-            setTimeout(() => completeLesson(), 5000);
-        }
-
-        async function completeLesson() {
-            currentUser.aulasCompletadas = (currentUser.aulasCompletadas || 0) + 1;
-            currentUser.ultimaAula = new Date().toISOString().split('T')[0];
-            currentUser.progresso = Math.min(100, (currentUser.aulasCompletadas / 90) * 100);
-            
-            updateStudentData(currentUser);
-            showAlert('Aula completada!', 'success');
-            loadDashboardData();
-        }
-
-        function updateStudentData(student) {
-            let students = JSON.parse(localStorage.getItem('madrassa_students') || '[]');
-            const index = students.findIndex(s => s.id === student.id || s.telefone === student.telefone);
-            if (index !== -1) {
-                students[index] = student;
-                localStorage.setItem('madrassa_students', JSON.stringify(students));
-            }
-            
-            const session = JSON.parse(localStorage.getItem('madrassa_session') || '{}');
-            session.user = student;
-            localStorage.setItem('madrassa_session', JSON.stringify(session));
-        }
-
-        // Test functions
-        function checkForTest() {
-            const today = new Date().toISOString().split('T')[0];
-            const lastTest = currentUser.notas && currentUser.notas.length > 0 ? 
-                currentUser.notas[currentUser.notas.length - 1].data : null;
-            
-            if (lastTest !== today) {
-                document.getElementById('testSection').classList.add('active');
-                generateQuestions();
-                startTestTimer();
-            }
-        }
-
-        function generateQuestions() {
-            const container = document.getElementById('questionsContainer');
-            const questions = [
-                {
-                    q: "Qual é a primeira letra do alfabeto árabe (lendo da direita para esquerda)?",
-                    options: ["Ya (ي)", "Alif (ا)", "Ba (ب)", "Ta (ت)"],
-                    correct: 1
-                },
-                {
-                    q: "Qual Kalimah é conhecida como 'A Palavra Pura'?",
-                    options: ["Shahadah", "Tayyibah", "Tawhid", "Tamjeed"],
-                    correct: 1
-                },
-                {
-                    q: "Quantas vezes devemos recitar Surat Al-Fatiha na oração?",
-                    options: ["Uma vez total", "Em cada rak'ah", "Apenas no início", "Nos testes"],
-                    correct: 1
-                }
-            ];
-            
-            let html = '';
-            questions.forEach((q, idx) => {
-                html += `
-                    <div class="question-container">
-                        <p class="question">${idx + 1}. ${q.q}</p>
-                        <div class="options">
-                            ${q.options.map((opt, i) => `
-                                <div class="option" onclick="selectOption(this, ${idx}, ${i})">${String.fromCharCode(65 + i)}) ${opt}</div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
             });
-            container.innerHTML = html;
-        }
-
-        function selectOption(element, question, answer) {
-            element.parentElement.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedAnswers[question] = answer;
-        }
-
-        function startTestTimer() {
-            testTimeRemaining = 90 * 60;
-            clearInterval(testTimerInterval);
-            
-            testTimerInterval = setInterval(() => {
-                testTimeRemaining--;
-                const minutes = Math.floor(testTimeRemaining / 60);
-                const seconds = testTimeRemaining % 60;
-                document.getElementById('testTimer').textContent = 
-                    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                
-                if (testTimeRemaining <= 0) submitTest();
-            }, 1000);
-        }
-
-        function submitTest() {
-            clearInterval(testTimerInterval);
-            
-            const correctAnswers = [1, 1, 1];
-            let score = 0;
-            
-            for (let i = 0; i < correctAnswers.length; i++) {
-                if (selectedAnswers[i] === correctAnswers[i]) score++;
-            }
-            
-            const percentage = Math.round((score / correctAnswers.length) * 100);
-            
-            if (!currentUser.notas) currentUser.notas = [];
-            currentUser.notas.push({
-                data: new Date().toISOString().split('T')[0],
-                nota: percentage
-            });
-            
-            currentUser.testesRealizados = (currentUser.testesRealizados || 0) + 1;
-            const total = currentUser.notas.reduce((sum, n) => sum + n.nota, 0);
-            currentUser.mediaGeral = Math.round(total / currentUser.notas.length);
-            
-            updateStudentData(currentUser);
-            
-            document.getElementById('testSection').classList.remove('active');
-            showAlert(`Teste finalizado! Nota: ${percentage}%`, 'success');
-            loadDashboardData();
-        }
-
-        function viewGrades() {
-            if (!currentUser.notas || currentUser.notas.length === 0) {
-                showAlert('Nenhum teste realizado.', 'warning');
-                return;
-            }
-            
-            let html = '<h3>Suas Notas:</h3>';
-            currentUser.notas.forEach((n, i) => {
-                html += `<p>Teste ${i + 1} (${n.data}): ${n.nota}%</p>`;
-            });
-            
-            showAlert(html, 'success', true);
-        }
-
-        // Admin functions (PROTEGIDAS)
-        async function loadAdminData() {
-            if (!adminSessionActive) return;
-            
-            // Reset timeout on activity
-            resetAdminTimeout();
-            
-            let students = JSON.parse(localStorage.getItem('madrassa_students') || '[]');
-            
-            // Pending table
-            const pendingBody = document.getElementById('pendingTableBody');
-            pendingBody.innerHTML = '';
-            
-            students.filter(s => s.status === 'pendente').forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${student.nome}</td>
-                    <td>${student.telefone}</td>
-                    <td>${student.pais}</td>
-                    <td>${student.provincia}</td>
-                    <td>${student.horario}</td>
-                    <td>${new Date(student.dataInscricao).toLocaleDateString()}</td>
-                    <td>
-                        <button class="btn btn-small btn-success" onclick="approveStudent('${student.id}')">Aprovar</button>
-                        <button class="btn btn-small btn-danger" onclick="rejectStudent('${student.id}')">Rejeitar</button>
-                    </td>
-                `;
-                pendingBody.appendChild(row);
-            });
-            
-            // All students
-            const allBody = document.getElementById('allStudentsBody');
-            allBody.innerHTML = '';
-            
-            students.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${student.nome}</td>
-                    <td>${student.telefone}</td>
-                    <td>${student.horario}</td>
-                    <td>${student.progresso || 0}%</td>
-                    <td><span class="status-badge status-${student.status}">${student.status}</span></td>
-                    <td>
-                        <button class="btn btn-small" onclick="viewStudentDetails('${student.id}')">Ver</button>
-                    </td>
-                `;
-                allBody.appendChild(row);
-            });
-            
-            // Stats
-            document.getElementById('pendingCount').textContent = students.filter(s => s.status === 'pendente').length;
-            document.getElementById('approvedCount').textContent = students.filter(s => s.status === 'aprovado').length;
-            document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('testsToGrade').textContent = students.reduce((sum, s) => sum + (s.notas ? s.notas.length : 0), 0);
-        }
-
-        async function approveStudent(studentId) {
-            if (!adminSessionActive) return;
-            resetAdminTimeout();
-            
-            let students = JSON.parse(localStorage.getItem('madrassa_students') || '[]');
-            const idx = students.findIndex(s => s.id === studentId);
-            
-            if (idx !== -1) {
-                students[idx].status = 'aprovado';
-                students[idx].aprovadoPor = ADMIN_NAME;
-                students[idx].dataAprovacao = new Date().toISOString();
-                localStorage.setItem('madrassa_students', JSON.stringify(students));
-                
-                showAlert('Aluno aprovado!', 'success');
-                loadAdminData();
-            }
-        }
-
-        async function rejectStudent(studentId) {
-            if (!adminSessionActive) return;
-            resetAdminTimeout();
-            
-            let students = JSON.parse(localStorage.getItem('madrassa_students') || '[]');
-            const idx = students.findIndex(s => s.id === studentId);
-            
-            if (idx !== -1) {
-                students[idx].status = 'rejeitado';
-                localStorage.setItem('madrassa_students', JSON.stringify(students));
-                
-                showAlert('Aluno rejeitado.', 'warning');
-                loadAdminData();
-            }
-        }
-
-        // Admin override functions
-        function adminSkipLesson() {
-            if (!adminSessionActive) return;
-            resetAdminTimeout();
-            showAlert('Admin: Pulando restrição de tempo!', 'success');
-        }
-
-        function adminForceTest() {
-            if (!adminSessionActive) return;
-            resetAdminTimeout();
-            document.getElementById('testSection').classList.add('active');
-            generateQuestions();
-            startTestTimer();
-            showAlert('Admin: Teste forçado!', 'success');
-        }
-
-        function adminViewAllGrades() {
-            if (!adminSessionActive) return;
-            resetAdminTimeout();
-            showAlert('Visualizando todas as notas...', 'success');
-        }
-
-        // Utility
-        function selectTime(element, time) {
-            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
-            element.classList.add('active');
-            localStorage.setItem('preferred_time', time);
-        }
-
-        function playLetter(letter) {
-            showAlert(`Reproduzindo: ${letter}`, 'success');
-        }
-
-        function showAlert(message, type, isHtml = false) {
-            const container = document.getElementById('alertContainer');
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type} show`;
-            alert.innerHTML = message;
-            container.appendChild(alert);
-            setTimeout(() => alert.remove(), 5000);
-        }
-
-        // Close modals on outside click
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-            }
-        }
-
-        // Track activity for admin timeout
-        document.addEventListener('click', () => {
-            if (adminSessionActive) resetAdminTimeout();
         });
-        
-        document.addEventListener('keypress', () => {
-            if (adminSessionActive) resetAdminTimeout();
-        });
+
+        // Load saved progress
+        window.onload = () => {
+            initAlphabet();
+            loadQuestion();
+            
+            const saved = localStorage.getItem('learnedLetters');
+            if (saved) {
+                const letters = JSON.parse(saved);
+                letters.forEach(letter => {
+                    learnedLetters.add(letter);
+                    // Find and mark card
+                    const cards = document.querySelectorAll('.letter-card');
+                    cards.forEach(card => {
+                        if (card.querySelector('.letter-name').textContent === letter) {
+                            card.classList.add('learned');
+                        }
+                    });
+                });
+                updateProgress();
+                checkBadges();
+            }
+        };
     </script>
 </body>
 </html>

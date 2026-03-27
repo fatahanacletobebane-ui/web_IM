@@ -5,103 +5,85 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Islam Moçambique</title>
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00c853">
+
 <style>
-body {
-    font-family: Arial;
-    margin: 0;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    color: white;
-    text-align: center;
+body{
+font-family:Arial;
+background:linear-gradient(to right,#0f2027,#203a43,#2c5364);
+color:white;text-align:center;
 }
 
-.container {
-    padding: 20px;
+input{
+width:85%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin:5px;
 }
 
-.card {
-    background: rgba(255,255,255,0.1);
-    padding: 15px;
-    margin: 10px;
-    border-radius: 15px;
+button{
+width:90%;
+padding:12px;
+margin:6px;
+border:none;
+border-radius:10px;
+background:#00c853;
+color:white;
 }
 
-button {
-    width: 90%;
-    padding: 12px;
-    margin: 8px;
-    border-radius: 10px;
-    border: none;
-    background: #00c853;
-    color: white;
+.card{
+background:rgba(255,255,255,0.1);
+padding:15px;
+margin:10px;
+border-radius:15px;
 }
 
-.hidden {
-    display: none;
-}
+.hidden{display:none;}
+img,video{max-width:90%;border-radius:10px;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<h1>🌙 Islam Moçambique</h1>
+<h2>🌙 Islam Moçambique</h2>
 
 <!-- LOGIN -->
 <div id="auth">
-<input id="numero"><br><br>
-<input id="pin" type="password"><br><br>
+<input id="numero" placeholder="84/86/82xxxxxxx"><br><br>
+<input id="otp" type="password" placeholder="digital PIN"><br><br>
 
-<button onclick="registrar()">Registar</button>
+<button onclick="enviarOTP()">Receber código</button>
 <button onclick="login()">Entrar</button>
 </div>
 
 <!-- APP -->
 <div id="app" class="hidden">
-
 <p>⭐ <span id="stars"></span></p>
 <p><span id="nivel"></span></p>
 
 <div class="card">
-
-<button onclick="abrir('horario_de_salat')">Horário de Salat</button>
+<button onclick="abrir('horario_de_salat')">Salat</button>
 <button onclick="abrir('alcorao')">Alcorão</button>
 <button onclick="abrir('reversao_novo_muculmano')">Novo Muçulmano</button>
-<button onclick="abrir('alfabeto_arabe')">Alfabeto Árabe</button>
-<button onclick="abrir('tasbih_digital')">Tasbih Digital</button>
-<button onclick="abrir('yassarna_parte_1')">Yassarna Parte 1</button>
-<button onclick="abrir('yassarna_2_parte')">Yassarna Parte 2</button>
+<button onclick="abrir('alfabeto_arabe')">Alfabeto</button>
+<button onclick="abrir('tasbih_digital')">Tasbih</button>
+<button onclick="abrir('yassarna_parte_1')">Yassarna 1</button>
+<button onclick="abrir('yassarna_2_parte')">Yassarna 2</button>
 
-<button onclick="mostrarApoio()">Apoio</button>
-<button onclick="ganhar()">Ganhar Estrelas</button>
-
+<button onclick="tarefas()">Ganhar Estrelas</button>
 </div>
-
-</div>
-
-<!-- APOIO -->
-<div id="apoio" class="hidden card">
-<p>
-A islam Moçambique tem trabalhado arduamente para difundir o din de Allah.<br><br>
-
-Mpesa: 1228803 (Bebane)<br>
-E-mola: 860407269 (Anacleto Bebane)<br>
-Millennium BIM NIB: 000100000012473356257<br><br>
-
-Que Allah recompense. Ameen
-</p>
-<button onclick="voltar()">Voltar</button>
 </div>
 
 <!-- TAREFAS -->
 <div id="tarefas" class="hidden card">
 
 <button onclick="partilhar()">Partilhar (+2⭐)</button>
-<button onclick="ads()">Ver (+4⭐)</button>
+<button onclick="verAds()">Ver anúncio (+3⭐)</button>
 
 <br><br>
-
-<input id="codigoPro" type="password"><br><br>
+<input id="codigoPro" type="password" placeholder="digital PIN"><br><br>
 <button onclick="ativarPro()">Ativar PRO</button>
 
 <p id="timer"></p>
@@ -109,166 +91,212 @@ Que Allah recompense. Ameen
 <button onclick="voltar()">Voltar</button>
 </div>
 
+<!-- ADS -->
+<div id="ads" class="hidden card">
+<div id="adsBox"></div>
+<p id="tempo"></p>
+<button onclick="proximoAds()">Ganhar mais estrelas</button>
+<button onclick="voltar()">Voltar</button>
 </div>
 
 <script>
 
-let user = null
+let user=null
+let adsIndex=0
 
-function getData(){
-    return JSON.parse(localStorage.getItem("db")) || {}
+const ADS=[
+"ads1.jpg","ads2.png","ads3.jpg","ads4.png","ads5.jpg",
+"ads6.mp4","ads7.mp4","ads8.mp4","ads9.mp4","ads10.mp4"
+]
+
+// BASE
+function getDB(){return JSON.parse(localStorage.getItem("db"))||{}}
+function saveDB(db){localStorage.setItem("db",JSON.stringify(db))}
+
+// CONVERSÃO
+function converter(n){
+let m=["A","B","C","D","E","F","G","H","I","J"]
+return n.split("").map(x=>m[x]).join("")
 }
 
-function saveData(db){
-    localStorage.setItem("db", JSON.stringify(db))
+// OTP
+function gerarOTP(numero){
+return converter(numero.slice(-4))
 }
 
-// CONVERTER NUMERO -> LETRAS
-function converter(numero){
-    let mapa = ["A","B","C","D","E","F","G","H","I","J"]
-    return numero.split("").map(n => mapa[n]).join("")
+// WHATSAPP
+function enviarOTP(){
+let numero = document.getElementById("numero").value
+let otp = gerarOTP(numero)
+let msg = "Seu código de acesso é: " + otp
+window.open("https://wa.me/"+numero+"?text="+encodeURIComponent(msg))
 }
 
-function registrar(){
-    let n = document.getElementById("numero").value
-    let p = document.getElementById("pin").value
-
-    let db = getData()
-
-    if(db[n]) return alert("Existe")
-
-    db[n] = {
-        pin: p,
-        estrelas: 50,
-        pro: false,
-        expira: 0
-    }
-
-    saveData(db)
-    alert("OK")
-}
-
+// LOGIN
 function login(){
-    let n = document.getElementById("numero").value
-    let p = document.getElementById("pin").value
+let n = numero.value
+let o = otp.value
+let db = getDB()
 
-    let db = getData()
+if(o === gerarOTP(n)){
 
-    if(db[n] && db[n].pin === p){
-        user = n
-        document.getElementById("auth").classList.add("hidden")
-        document.getElementById("app").classList.remove("hidden")
-        atualizar()
-    } else {
-        alert("Erro")
-    }
+if(!db[n]){
+db[n]={estrelas:50,pro:false,expira:0,shares:0,data:Date.now()}
 }
 
-function atualizar(){
-    let db = getData()
-    let u = db[user]
+user=n
+saveDB(db)
 
-    if(u.pro && Date.now() > u.expira){
-        u.pro = false
-    }
+auth.classList.add("hidden")
+app.classList.remove("hidden")
 
-    document.getElementById("stars").innerText = u.estrelas
-    document.getElementById("nivel").innerText = u.pro ? "PRO ATIVO" : "NORMAL"
+update()
+avisoPro()
 
-    saveData(db)
+}else alert("Código inválido")
 }
 
-function abrir(pasta){
-    let db = getData()
-    let u = db[user]
+// UPDATE
+function update(){
+let db=getDB()
+let u=db[user]
 
-    if(!u.pro){
-        if(u.estrelas < 5) return alert("Sem estrelas")
-        u.estrelas -= 5
-    }
-
-    saveData(db)
-    atualizar()
-
-    window.location.href =
-    "https://fatahanacletobebane-ui.github.io/web_IM/" + pasta + "/index.html"
+if(new Date().toDateString()!=new Date(u.data).toDateString()){
+u.shares=0
+u.data=Date.now()
 }
 
-function mostrarApoio(){
-    hideAll()
-    document.getElementById("apoio").classList.remove("hidden")
+if(u.pro && Date.now()>u.expira){
+u.pro=false
 }
 
-function ganhar(){
-    hideAll()
-    document.getElementById("tarefas").classList.remove("hidden")
+stars.innerText=u.estrelas
+nivel.innerText=u.pro?"PRO ATIVO":"NORMAL"
+
+saveDB(db)
+
+if(!u.pro){
+setTimeout(avisoPro,3000)
+}
 }
 
-function voltar(){
-    hideAll()
-    document.getElementById("app").classList.remove("hidden")
+// AVISO PRO
+function avisoPro(){
+let db=getDB()
+let u=db[user]
+if(!u.pro){
+alert("Ative o PRO e use sem gastar estrelas por 35 dias")
+}
 }
 
-function hideAll(){
-    document.getElementById("app").classList.add("hidden")
-    document.getElementById("apoio").classList.add("hidden")
-    document.getElementById("tarefas").classList.add("hidden")
+// ABRIR
+function abrir(p){
+let db=getDB()
+let u=db[user]
+
+avisoPro()
+
+if(!u.pro){
+if(u.estrelas<8)return alert("Sem estrelas")
+u.estrelas-=8
 }
 
-// PARTILHA
+saveDB(db)
+update()
+
+location.href="https://fatahanacletobebane-ui.github.io/web_IM/"+p+"/index.html"
+}
+
+// PARTILHAR
 function partilhar(){
-    let texto = "https://fatahanacletobebane-ui.github.io/web_IM/"
-    window.open("https://wa.me/?text=" + texto)
+let db=getDB()
+let u=db[user]
 
-    let db = getData()
-    db[user].estrelas += 2
-    saveData(db)
-    atualizar()
+if(u.shares>=10)return alert("Limite diário")
+
+window.open("https://wa.me/?text=https://fatahanacletobebane-ui.github.io/web_IM/")
+
+u.estrelas+=2
+u.shares++
+
+saveDB(db)
+update()
 }
 
 // ADS
-function ads(){
-    let t = 10
-    let el = document.getElementById("timer")
+function verAds(){
+hide()
+ads.classList.remove("hidden")
+mostrarAds()
+}
 
-    let i = setInterval(()=>{
-        el.innerText = t
-        t--
+function mostrarAds(){
+let file=ADS[adsIndex]
 
-        if(t < 0){
-            clearInterval(i)
+if(file.includes(".mp4")){
+adsBox.innerHTML=`<video src="${file}" autoplay></video>`
+}else{
+adsBox.innerHTML=`<img src="${file}">`
+}
 
-            let db = getData()
-            db[user].estrelas += 4
-            saveData(db)
-            atualizar()
+tempoAds()
+}
 
-            el.innerText = "OK"
-        }
-    },1000)
+function tempoAds(){
+let t=10
+tempo.innerText=t
+
+let i=setInterval(()=>{
+t--
+tempo.innerText=t
+
+if(t<=0){
+clearInterval(i)
+let db=getDB()
+db[user].estrelas+=3
+saveDB(db)
+update()
+}
+},1000)
+}
+
+function proximoAds(){
+adsIndex=(adsIndex+1)%ADS.length
+mostrarAds()
 }
 
 // PRO
 function ativarPro(){
-    let codigo = document.getElementById("codigoPro").value
+let code=codigoPro.value
 
-    let esperado = converter(user)
+if(code===converter(user)){
+let db=getDB()
+db[user].pro=true
+db[user].expira=Date.now()+35*24*60*60*1000
 
-    if(codigo === esperado){
-        let db = getData()
+saveDB(db)
+update()
 
-        db[user].pro = true
-        db[user].expira = Date.now() + (35*24*60*60*1000)
-
-        saveData(db)
-        atualizar()
-
-        alert("PRO ativado")
-    } else {
-        alert("Código inválido")
-    }
+}else{
+alert("Código inválido")
+}
 }
 
+// UI
+function tarefas(){hide();tarefas.classList.remove("hidden")}
+function voltar(){hide();app.classList.remove("hidden")}
+function hide(){
+app.classList.add("hidden")
+tarefas.classList.add("hidden")
+ads.classList.add("hidden")
+}
+
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("sw.js")
+}
 </script>
 
 </body>

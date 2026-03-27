@@ -3,366 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islam Moçambique - Portal Central</title>
+    <title>Islam Moçambique - Portal</title>
     
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
+    <!-- Fonte -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'amiri': ['Amiri', 'serif'],
-                        'poppins': ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        'islam-green': '#1B5E20',
-                        'islam-light': '#2E7D32',
-                        'islam-gold': '#FFD700',
-                        'islam-dark': '#0D3328',
-                        'islam-cream': '#F5F5DC',
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'shimmer': 'shimmer 2s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-1000px 0' },
-                            '100%': { backgroundPosition: '1000px 0' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
-        body {
-            background: linear-gradient(135deg, #0D3328 0%, #1B5E20 50%, #0D3328 100%);
-            min-height: 100vh;
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-        
-        .geometric-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFD700' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-        
-        .islamic-border {
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #FFD700, #1B5E20, #FFD700) 1;
-        }
-        
-        .btn-gold {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-        }
-        
-        .btn-gold:hover {
-            box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6);
-            transform: translateY(-2px);
-        }
-        
-        .loading-spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 3px solid #FFD700;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .notification {
-            animation: slideIn 0.5s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .mosque-silhouette {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 200px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23000' fill-opacity='0.2' d='M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
-            background-size: cover;
-            pointer-events: none;
-            z-index: -1;
-        }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0D3328 0%, #1B5E20 50%, #0D3328 100%); min-height: 100vh; }
+        .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        .card-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .gold-btn { background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%); color: #0D3328; }
+        .gold-btn:hover { box-shadow: 0 5px 20px rgba(255,215,0,0.5); }
+        .loading { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #FFD700; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFD700' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
     </style>
 </head>
-<body class="font-poppins text-white geometric-pattern overflow-x-hidden">
+<body class="text-white pattern">
 
-    <!-- Configuração Firebase -->
+    <!-- Firebase Config EXATA que você forneceu -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyD2rNS7HSJyek3OCrRquudFgqQSWXZJYrY",
-            authDomain: "islam-mocambique.firebaseapp.com",
-            databaseURL: "https://islam-mocambique-default-rtdb.firebaseio.com",
-            projectId: "islam-mocambique",
-            storageBucket: "islam-mocambique.appspot.com",
+            authDomain: "madrassa-online-b851c.firebaseapp.com",
+            databaseURL: "https://madrassa-online-b851c-default-rtdb.firebaseio.com",
+            projectId: "madrassa-online-b851c",
+            storageBucket: "madrassa-online-b851c.firebasestorage.app",
             messagingSenderId: "360782668012",
-            appId: "1:360782668012:web:d501ef187911db632445c9"
+            appId: "1:360782668012:web:d501ef187911db632445c9",
+            measurementId: "G-RV9GD4S22T"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const database = firebase.database();
+        const db = firebase.database();
     </script>
 
-    <!-- Tela de Login -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4 relative">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-10 left-10 w-32 h-32 bg-islam-gold rounded-full opacity-10 animate-float"></div>
-            <div class="absolute bottom-20 right-20 w-48 h-48 bg-white rounded-full opacity-5 animate-float" style="animation-delay: 2s;"></div>
-            <div class="absolute top-1/2 left-1/4 w-24 h-24 bg-islam-gold rounded-full opacity-10 animate-float" style="animation-delay: 4s;"></div>
-        </div>
-
-        <div class="glass-card rounded-3xl p-8 md:p-12 max-w-md w-full relative z-10">
+    <!-- TELA LOGIN -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass rounded-3xl p-8 max-w-md w-full">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-islam-gold to-yellow-600 flex items-center justify-center shadow-lg">
-                    <i class="fas fa-moon text-3xl text-islam-dark"></i>
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                    <i class="fas fa-moon text-3xl text-green-900"></i>
                 </div>
-                <h1 class="font-amiri text-4xl font-bold text-islam-gold mb-2">Islam Moçambique</h1>
-                <p class="text-gray-300 text-sm">Portal de Acesso aos Projetos</p>
+                <h1 class="text-3xl font-bold text-yellow-400 mb-2">Islam Moçambique</h1>
+                <p class="text-gray-300 text-sm">Portal de Acesso</p>
             </div>
 
             <div id="loginForm">
                 <div class="mb-6">
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Número de Telefone</label>
+                    <label class="block text-sm mb-2 text-gray-300">Número de Telefone</label>
                     <div class="relative">
                         <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">+258</span>
-                        <input type="tel" id="phoneInput" placeholder="860407269" 
-                            class="w-full pl-16 pr-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-islam-gold focus:ring-2 focus:ring-islam-gold/50 transition-all">
+                        <input type="tel" id="phoneInput" placeholder="860407269" class="w-full pl-16 pr-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-yellow-400">
                     </div>
-                    <p class="text-xs text-gray-400 mt-2">Formato: 860407269 (sem espaços)</p>
                 </div>
 
-                <div id="recaptcha-container" class="mb-6 flex justify-center"></div>
-
-                <button onclick="sendWhatsAppVerification()" 
-                    class="w-full btn-gold text-islam-dark font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 mb-4">
+                <button onclick="sendWhatsApp()" class="w-full gold-btn font-bold py-4 rounded-xl flex items-center justify-center gap-3 transition-all mb-4">
                     <i class="fab fa-whatsapp text-xl"></i>
                     <span>Verificar via WhatsApp</span>
                 </button>
-
-                <div class="text-center">
-                    <p class="text-xs text-gray-400">
-                        Ao clicar, será redirecionado para o WhatsApp do administrador
-                    </p>
-                </div>
+                <p class="text-xs text-gray-400 text-center">Será redirecionado para WhatsApp do administrador</p>
             </div>
 
-            <div id="waitingApproval" class="hidden text-center py-8">
-                <div class="loading-spinner mx-auto mb-4"></div>
-                <h3 class="text-xl font-semibold mb-2 text-islam-gold">Aguardando Aprovação</h3>
-                <p class="text-gray-300 mb-4">Sua solicitação foi enviada. Aguarde a confirmação do administrador.</p>
+            <div id="waitingScreen" class="hidden text-center py-8">
+                <div class="loading mx-auto mb-4"></div>
+                <h3 class="text-xl font-semibold mb-2 text-yellow-400">Aguardando Aprovação</h3>
+                <p class="text-gray-300 mb-4">Envie a mensagem no WhatsApp e aguarde...</p>
                 <div class="bg-white/10 rounded-lg p-4 mb-4">
-                    <p class="text-sm text-gray-400">Mensagem enviada:</p>
-                    <p class="text-sm italic mt-1">"peço a confirmação da minha inscrição na website Islam Moçambique para <span id="displayPhone"></span>"</p>
+                    <p class="text-xs text-gray-400">Mensagem enviada para 860407269:</p>
+                    <p class="text-sm mt-1 italic">"peço a confirmação da minha inscrição na website Islam Moçambique para <span id="showPhone"></span>"</p>
                 </div>
-                <button onclick="checkApprovalStatus()" class="text-islam-gold hover:underline text-sm">
-                    Verificar status
-                </button>
-            </div>
-
-            <div id="verificationForm" class="hidden">
-                <div class="mb-6">
-                    <label class="block text-sm font-medium mb-2 text-gray-300">Código de Verificação</label>
-                    <input type="text" id="codeInput" placeholder="000000" maxlength="6"
-                        class="w-full px-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white text-center text-2xl tracking-widest placeholder-gray-500 focus:outline-none focus:border-islam-gold focus:ring-2 focus:ring-islam-gold/50 transition-all">
-                </div>
-                <button onclick="verifyCode()" 
-                    class="w-full bg-islam-light hover:bg-islam-green text-white font-bold py-4 rounded-xl transition-all duration-300">
-                    Verificar Código
-                </button>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard Principal (Inicialmente Oculto) -->
+    <!-- DASHBOARD -->
     <div id="dashboard" class="hidden min-h-screen">
-        <!-- Header -->
-        <header class="glass-card sticky top-0 z-50 px-6 py-4">
+        <header class="glass sticky top-0 z-50 px-6 py-4">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-islam-gold to-yellow-600 flex items-center justify-center">
-                        <i class="fas fa-moon text-islam-dark text-xl"></i>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center">
+                        <i class="fas fa-moon text-green-900"></i>
                     </div>
                     <div>
-                        <h1 class="font-amiri text-2xl font-bold text-islam-gold">Islam Moçambique</h1>
-                        <p class="text-xs text-gray-300">Portal de Projetos</p>
+                        <h1 class="text-xl font-bold text-yellow-400">Islam Moçambique</h1>
+                        <p class="text-xs text-gray-300">github.com/fatahanacleto</p>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:flex items-center gap-2 text-sm text-gray-300">
-                        <i class="fas fa-user-circle text-islam-gold"></i>
-                        <span id="userPhoneDisplay"></span>
-                    </div>
-                    <button onclick="logout()" class="px-4 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 transition-all text-sm">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                <div class="flex items-center gap-3">
+                    <span id="userPhone" class="hidden md:block text-sm text-gray-300"></span>
+                    <button onclick="logout()" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-300 text-sm">
+                        <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- Conteúdo Principal -->
         <main class="max-w-7xl mx-auto px-6 py-12">
-            <!-- Hero Section -->
-            <div class="text-center mb-16 relative">
-                <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                    <i class="fas fa-mosque text-9xl text-islam-gold"></i>
-                </div>
-                <h2 class="font-amiri text-5xl md:text-6xl font-bold mb-4 relative z-10">
-                    Bem-vindo ao <span class="text-islam-gold">Islam Moçambique</span>
-                </h2>
-                <p class="text-xl text-gray-300 max-w-2xl mx-auto relative z-10">
-                    Acesse todos os nossos projetos e recursos educacionais islâmicos
-                </p>
-                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-islam-gold to-transparent mx-auto mt-6"></div>
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Bem-vindo ao <span class="text-yellow-400">Islam Moçambique</span></h2>
+                <p class="text-gray-300">Escolha uma aplicação para aceder</p>
             </div>
 
-            <!-- Grid de Projetos -->
-            <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Os cards serão gerados dinamicamente via JavaScript -->
-            </div>
+            <!-- 7 CARDS DAS PASTAS DO GITHUB -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="appsGrid">
+                
+                <!-- 1. Alcorão -->
+                <div onclick="openApp('alcorao')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center relative">
+                        <i class="fas fa-book-open text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Ler & Escutar</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Alcorão</h3>
+                        <p class="text-gray-400 text-sm mb-4">Leitura e audição do Alcorão Sagrado</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">114 Suratas</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Seção de Estatísticas -->
-            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl font-bold text-islam-gold mb-1" id="statProjects">0</div>
-                    <div class="text-sm text-gray-400">Projetos</div>
+                <!-- 2. Alfabeto Árabe -->
+                <div onclick="openApp('alfabeto_arabe')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center relative">
+                        <i class="fas fa-font text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Aprendizado</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Alfabeto Árabe</h3>
+                        <p class="text-gray-400 text-sm mb-4">Aprenda as letras do alfabeto árabe</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">28 Letras</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl font-bold text-islam-gold mb-1" id="statUsers">0</div>
-                    <div class="text-sm text-gray-400">Utilizadores</div>
+
+                <!-- 3. Horário de Salat -->
+                <div onclick="openApp('horario_de_salat')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-purple-600 to-pink-800 flex items-center justify-center relative">
+                        <i class="fas fa-clock text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Orações</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Horário de Salat</h3>
+                        <p class="text-gray-400 text-sm mb-4">Horários das orações diárias</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">5 Tempos</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl font-bold text-islam-gold mb-1">24/7</div>
-                    <div class="text-sm text-gray-400">Disponível</div>
+
+                <!-- 4. Reversão Novo Muçulmano -->
+                <div onclick="openApp('reversao_novo_muculmano')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-amber-600 to-orange-800 flex items-center justify-center relative">
+                        <i class="fas fa-star-and-crescent text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Guia</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Reversão Novo Muçulmano</h3>
+                        <p class="text-gray-400 text-sm mb-4">Guia para novos convertidos</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">Educativo</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl font-bold text-islam-gold mb-1">100%</div>
-                    <div class="text-sm text-gray-400">Gratuito</div>
+
+                <!-- 5. Tasbih Digital -->
+                <div onclick="openApp('tasbih_digital')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-cyan-600 to-blue-800 flex items-center justify-center relative">
+                        <i class="fas fa-calculator text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Dhikr</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Tasbih Digital</h3>
+                        <p class="text-gray-400 text-sm mb-4">Contador digital para dhikr</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">Digital</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- 6. Yassarna Parte 1 -->
+                <div onclick="openApp('yassarna_parte_1')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-rose-600 to-red-800 flex items-center justify-center relative">
+                        <i class="fas fa-book text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Nível 1</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Yassarna Parte 1</h3>
+                        <p class="text-gray-400 text-sm mb-4">Primeira parte do curso Yassarna</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">Iniciante</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Yassarna Parte 2 -->
+                <div onclick="openApp('yassarna_2_parte')" class="glass rounded-2xl overflow-hidden card-hover cursor-pointer transition-all duration-300">
+                    <div class="h-40 bg-gradient-to-br from-violet-600 to-purple-800 flex items-center justify-center relative">
+                        <i class="fas fa-graduation-cap text-6xl text-white/80"></i>
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/30 rounded-full text-xs">Nível 2</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-yellow-400">Yassarna Parte 2</h3>
+                        <p class="text-gray-400 text-sm mb-4">Segunda parte do curso Yassarna</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 bg-white/10 rounded">Avançado</span>
+                            <i class="fas fa-arrow-right text-yellow-400"></i>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="mt-20 glass-card py-8 px-6">
+        <footer class="mt-20 glass py-8 px-6">
             <div class="max-w-7xl mx-auto text-center">
-                <div class="flex items-center justify-center gap-2 mb-4">
-                    <i class="fas fa-moon text-islam-gold"></i>
-                    <span class="font-amiri text-xl">Islam Moçambique</span>
-                </div>
-                <p class="text-gray-400 text-sm mb-4">Contacto: 860407269 | Islammocambique@gmail.com</p>
-                <div class="flex justify-center gap-4">
-                    <a href="https://wa.me/258860407269" target="_blank" class="w-10 h-10 rounded-full bg-green-600/20 hover:bg-green-600/40 flex items-center justify-center transition-all">
+                <p class="text-gray-400 text-sm mb-2">Contacto: 860407269 | Islammocambique@gmail.com</p>
+                <div class="flex justify-center gap-4 mb-4">
+                    <a href="https://wa.me/258860407269" class="w-10 h-10 rounded-full bg-green-600/20 flex items-center justify-center">
                         <i class="fab fa-whatsapp text-green-400"></i>
                     </a>
-                    <a href="mailto:Islammocambique@gmail.com" class="w-10 h-10 rounded-full bg-red-600/20 hover:bg-red-600/40 flex items-center justify-center transition-all">
+                    <a href="mailto:Islammocambique@gmail.com" class="w-10 h-10 rounded-full bg-red-600/20 flex items-center justify-center">
                         <i class="fas fa-envelope text-red-400"></i>
                     </a>
                 </div>
-                <p class="text-gray-500 text-xs mt-6">© 2024 Islam Moçambique. Todos os direitos reservados.</p>
+                <p class="text-gray-500 text-xs">© 2024 Islam Moçambique</p>
             </div>
         </footer>
     </div>
 
-    <!-- Painel Administrativo (Acesso Especial) -->
-    <div id="adminPanel" class="hidden min-h-screen bg-gray-900">
-        <div class="p-6 max-w-7xl mx-auto">
+    <!-- PAINEL ADMIN -->
+    <div id="adminPanel" class="hidden min-h-screen bg-gray-900 p-6">
+        <div class="max-w-6xl mx-auto">
             <div class="flex items-center justify-between mb-8">
-                <h1 class="text-3xl font-bold text-islam-gold">
-                    <i class="fas fa-shield-alt mr-3"></i>Consola Administrativa
-                </h1>
-                <button onclick="showDashboard()" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-all">
-                    <i class="fas fa-arrow-left mr-2"></i>Voltar
-                </button>
+                <h1 class="text-3xl font-bold text-yellow-400"><i class="fas fa-shield-alt mr-3"></i>Consola Admin</h1>
+                <button onclick="showDashboard()" class="px-4 py-2 bg-gray-700 rounded-lg">Voltar</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Solicitações Pendentes -->
-                <div class="lg:col-span-2">
-                    <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                        <h2 class="text-xl font-semibold mb-4 flex items-center">
-                            <i class="fas fa-clock text-yellow-500 mr-2"></i>
-                            Solicitações Pendentes
-                        </h2>
-                        <div id="pendingRequests" class="space-y-4">
-                            <p class="text-gray-500 text-center py-8">Nenhuma solicitação pendente</p>
-                        </div>
+                <div class="lg:col-span-2 bg-gray-800 rounded-2xl p-6 border border-gray-700">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-clock text-yellow-500 mr-2"></i>Pendentes
+                    </h2>
+                    <div id="pendingList" class="space-y-3">
+                        <p class="text-gray-500 text-center py-8">Carregando...</p>
                     </div>
                 </div>
 
-                <!-- Estatísticas Admin -->
-                <div class="space-y-6">
-                    <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                        <h3 class="text-lg font-semibold mb-4">Resumo</h3>
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded-lg">
-                                <span class="text-gray-300">Total Utilizadores</span>
-                                <span class="text-2xl font-bold text-islam-gold" id="adminTotalUsers">0</span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded-lg">
-                                <span class="text-gray-300">Pendentes</span>
-                                <span class="text-2xl font-bold text-yellow-500" id="adminPending">0</span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded-lg">
-                                <span class="text-gray-300">Aprovados Hoje</span>
-                                <span class="text-2xl font-bold text-green-500" id="adminApprovedToday">0</span>
-                            </div>
+                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
+                    <h3 class="text-lg font-semibold mb-4">Estatísticas</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between p-3 bg-gray-700/50 rounded-lg">
+                            <span class="text-gray-300">Total Users</span>
+                            <span class="text-2xl font-bold text-yellow-400" id="statTotal">0</span>
                         </div>
-                    </div>
-
-                    <!-- Configurações Rápidas -->
-                    <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                        <h3 class="text-lg font-semibold mb-4">Configurações</h3>
-                        <div class="space-y-3">
-                            <button onclick="exportUsers()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-all text-left px-4">
-                                <i class="fas fa-download mr-2"></i>Exportar Utilizadores
-                            </button>
-                            <button onclick="clearAllPending()" class="w-full py-3 bg-red-600/50 hover:bg-red-600 rounded-lg transition-all text-left px-4">
-                                <i class="fas fa-trash mr-2"></i>Limpar Pendentes
-                            </button>
+                        <div class="flex justify-between p-3 bg-gray-700/50 rounded-lg">
+                            <span class="text-gray-300">Pendentes</span>
+                            <span class="text-2xl font-bold text-yellow-500" id="statPending">0</span>
                         </div>
                     </div>
                 </div>
@@ -370,9 +283,9 @@
         </div>
     </div>
 
-    <!-- Notificação Toast -->
+    <!-- TOAST -->
     <div id="toast" class="fixed top-4 right-4 z-50 hidden">
-        <div class="glass-card rounded-xl p-4 flex items-center gap-3 notification max-w-sm">
+        <div class="glass rounded-xl p-4 flex items-center gap-3 max-w-sm">
             <div id="toastIcon" class="w-10 h-10 rounded-full flex items-center justify-center"></div>
             <div>
                 <h4 id="toastTitle" class="font-semibold"></h4>
@@ -381,245 +294,72 @@
         </div>
     </div>
 
-    <div class="mosque-silhouette"></div>
-
     <script>
-        // Configuração dos Projetos - ADICIONE SEUS REPOSITÓRIOS AQUI
-        const projects = [
-            {
-                id: 'madrassa',
-                name: 'Madrassa Online',
-                description: 'Plataforma de ensino islâmico com alfabeto árabe, Alcorão e orações',
-                icon: 'fa-book-open',
-                color: 'from-emerald-500 to-teal-600',
-                url: 'https://github.com/seu-usuario/madrassa-online',
-                stats: { users: '150+', lessons: '50+' }
-            },
-            {
-                id: 'quran',
-                name: 'Estudos do Alcorão',
-                description: 'Surat Al-Fatiha e estudos detalhados do Alcorão com áudio',
-                icon: 'fa-quran',
-                color: 'from-blue-500 to-indigo-600',
-                url: 'https://github.com/seu-usuario/quran-studies',
-                stats: { users: '200+', surahs: '114' }
-            },
-            {
-                id: 'prayers',
-                name: 'Duãs e Orações',
-                description: 'Coleção de orações diárias e supplicações islâmicas',
-                icon: 'fa-pray',
-                color: 'from-purple-500 to-pink-600',
-                url: 'https://github.com/seu-usuario/daily-prayers',
-                stats: { users: '100+', duas: '40+' }
-            },
-            {
-                id: 'kalimah',
-                name: 'Kalimah',
-                description: 'Aprendizado das declarações de fé islâmicas',
-                icon: 'fa-star-and-crescent',
-                color: 'from-amber-500 to-orange-600',
-                url: 'https://github.com/seu-usuario/kalimah',
-                stats: { users: '80+', lessons: '7' }
-            },
-            {
-                id: 'alphabet',
-                name: 'Alfabeto Árabe',
-                description: 'Aprendizado interativo do alfabeto árabe para iniciantes',
-                icon: 'fa-font',
-                color: 'from-rose-500 to-red-600',
-                url: 'https://github.com/seu-usuario/arabic-alphabet',
-                stats: { users: '120+', letters: '28' }
-            },
-            {
-                id: 'admin',
-                name: 'Painel Admin',
-                description: 'Sistema de gestão para professores e administradores',
-                icon: 'fa-cog',
-                color: 'from-gray-600 to-gray-800',
-                url: 'https://github.com/seu-usuario/admin-console',
-                stats: { users: '10+', features: '20+' }
-            }
-        ];
-
-        // Variáveis Globais
+        // VARIÁVEIS
         let currentPhone = '';
-        let confirmationResult = null;
-        let isAdmin = false;
+        let checkInterval = null;
 
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAuthState();
-            renderProjects();
-            updateStats();
-        });
-
-        // Verificar estado de autenticação
-        function checkAuthState() {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    const userRef = database.ref('users/' + user.uid);
-                    userRef.once('value').then((snapshot) => {
-                        const userData = snapshot.val();
-                        if (userData && userData.approved) {
-                            showDashboard();
-                            document.getElementById('userPhoneDisplay').textContent = userData.phone || user.phoneNumber;
-                            if (userData.isAdmin) {
-                                isAdmin = true;
-                                addAdminButton();
-                            }
-                        } else {
-                            showWaitingApproval(userData?.phone || user.phoneNumber);
-                        }
-                    });
-                } else {
-                    showLogin();
-                }
-            });
-        }
-
-        // Renderizar Cards de Projetos
-        function renderProjects() {
-            const grid = document.getElementById('projectsGrid');
-            grid.innerHTML = projects.map(project => `
-                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer transition-all duration-500 hover:shadow-2xl"
-                     onclick="openProject('${project.url}')">
-                    <div class="h-48 bg-gradient-to-br ${project.color} relative overflow-hidden">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas ${project.icon} text-6xl text-white/80 group-hover:scale-110 transition-transform duration-500"></i>
-                        </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 bg-black/30 backdrop-blur-sm rounded-full text-xs text-white border border-white/20">
-                                ${project.stats.users} users
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:text-islam-gold transition-colors">${project.name}</h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">${project.description}</p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex gap-2">
-                                ${Object.entries(project.stats).map(([key, value]) => `
-                                    <span class="text-xs px-2 py-1 bg-white/10 rounded-lg text-gray-300">
-                                        ${value} ${key}
-                                    </span>
-                                `).join('')}
-                            </div>
-                            <i class="fas fa-arrow-right text-islam-gold opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all"></i>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            document.getElementById('statProjects').textContent = projects.length;
-        }
-
-        // Enviar Verificação WhatsApp
-        function sendWhatsAppVerification() {
-            const phoneInput = document.getElementById('phoneInput').value.trim();
-            
-            if (!phoneInput || phoneInput.length < 9) {
-                showToast('Erro', 'Por favor, insira um número de telefone válido', 'error');
-                return;
-            }
-
-            currentPhone = '+258' + phoneInput;
-            document.getElementById('displayPhone').textContent = phoneInput;
-
-            // Criar link do WhatsApp com mensagem pré-definida
-            const message = `peço a confirmação da minha inscrição na website Islam Moçambique para ${phoneInput}`;
-            const whatsappUrl = `https://wa.me/258860407269?text=${encodeURIComponent(message)}`;
-            
-            // Abrir WhatsApp
-            window.open(whatsappUrl, '_blank');
-            
-            // Salvar solicitação no Firebase
-            const requestRef = database.ref('pendingRequests').push();
-            requestRef.set({
-                phone: currentPhone,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                status: 'pending',
-                ip: 'user-ip' // Você pode adicionar lógica para capturar IP
-            }).then(() => {
-                showWaitingApproval(currentPhone);
-                showToast('WhatsApp Aberto', 'Envie a mensagem e aguarde aprovação', 'success');
-            });
-        }
-
-        // Mostrar Tela de Espera
-        function showWaitingApproval(phone) {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('verificationForm').classList.add('hidden');
-            document.getElementById('waitingApproval').classList.remove('hidden');
-            document.getElementById('displayPhone').textContent = phone.replace('+258', '');
-            
-            // Iniciar polling para verificar aprovação
-            startApprovalPolling(phone);
-        }
-
-        // Polling para verificar aprovação
-        function startApprovalPolling(phone) {
-            const checkInterval = setInterval(() => {
-                database.ref('pendingRequests').orderByChild('phone').equalTo(phone).once('value')
-                    .then((snapshot) => {
-                        snapshot.forEach((childSnapshot) => {
-                            const data = childSnapshot.val();
-                            if (data.status === 'approved') {
-                                clearInterval(checkInterval);
-                                // Criar usuário após aprovação
-                                createUserAfterApproval(phone);
-                            } else if (data.status === 'rejected') {
-                                clearInterval(checkInterval);
-                                showToast('Solicitação Rejeitada', 'Contacte o administrador para mais informações', 'error');
-                                showLogin();
-                            }
-                        });
-                    });
-            }, 5000); // Verificar a cada 5 segundos
-        }
-
-        // Criar usuário após aprovação
-        function createUserAfterApproval(phone) {
-            // Simular login anônimo ou criar conta
-            auth.signInAnonymously().then((userCredential) => {
-                const user = userCredential.user;
-                database.ref('users/' + user.uid).set({
-                    phone: phone,
-                    approved: true,
-                    approvedAt: firebase.database.ServerValue.TIMESTAMP,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP
-                }).then(() => {
-                    showToast('Aprovado!', 'Bem-vindo ao Islam Moçambique', 'success');
-                    showDashboard();
-                });
-            });
-        }
-
-        // Verificar status manualmente
-        function checkApprovalStatus() {
-            showToast('Verificando...', 'A verificar status da aprovação', 'info');
-            database.ref('pendingRequests').orderByChild('phone').equalTo(currentPhone).once('value')
-                .then((snapshot) => {
-                    if (!snapshot.exists()) {
-                        showToast('Erro', 'Solicitação não encontrada', 'error');
+        // VERIFICAR AUTH
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.ref('users/' + user.uid).once('value').then(snap => {
+                    const data = snap.val();
+                    if (data?.approved) {
+                        showDashboard();
+                        document.getElementById('userPhone').textContent = data.phone;
+                        if (data.isAdmin) addAdminBtn();
+                    } else {
+                        showWaiting(data?.phone);
                     }
                 });
-        }
+            } else {
+                showLogin();
+            }
+        });
 
-        // Verificar código (método alternativo com Firebase Phone Auth)
-        function verifyCode() {
-            const code = document.getElementById('codeInput').value;
-            if (!code || code.length !== 6) {
-                showToast('Erro', 'Código inválido', 'error');
+        // ENVIAR WHATSAPP
+        function sendWhatsApp() {
+            const phone = document.getElementById('phoneInput').value.trim();
+            if (!phone || phone.length < 9) {
+                toast('Erro', 'Número inválido', 'error');
                 return;
             }
+
+            currentPhone = '+258' + phone;
+            document.getElementById('showPhone').textContent = phone;
+
+            // Mensagem exata
+            const msg = `peço a confirmação da minha inscrição na website Islam Moçambique para ${phone}`;
+            const url = `https://wa.me/258860407269?text=${encodeURIComponent(msg)}`;
             
-            // Implementar verificação de código se usar Firebase Phone Auth
-            showToast('Sucesso', 'Verificação concluída!', 'success');
+            window.open(url, '_blank');
+
+            // Salvar no Firebase
+            db.ref('pendingRequests').push({
+                phone: currentPhone,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                status: 'pending'
+            }).then(() => {
+                showWaiting(phone);
+                startChecking();
+            });
         }
 
-        // Mostrar Dashboard
+        // MOSTRAR TELAS
+        function showLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('waitingScreen').classList.add('hidden');
+        }
+
+        function showWaiting(phone) {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('waitingScreen').classList.remove('hidden');
+            document.getElementById('showPhone').textContent = phone.replace('+258', '');
+        }
+
         function showDashboard() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('adminPanel').classList.add('hidden');
@@ -627,204 +367,138 @@
             updateStats();
         }
 
-        // Mostrar Login
-        function showLogin() {
+        function showAdmin() {
             document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('waitingApproval').classList.add('hidden');
-            document.getElementById('verificationForm').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadPending();
         }
 
-        // Logout
-        function logout() {
-            auth.signOut().then(() => {
-                showToast('Até breve!', 'Sessão terminada com sucesso', 'info');
-                showLogin();
+        // VERIFICAR APROVAÇÃO
+        function startChecking() {
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(() => {
+                db.ref('pendingRequests').orderByChild('phone').equalTo(currentPhone).once('value').then(snap => {
+                    snap.forEach(child => {
+                        if (child.val().status === 'approved') {
+                            clearInterval(checkInterval);
+                            createUser();
+                        }
+                    });
+                });
+            }, 3000);
+        }
+
+        function createUser() {
+            auth.signInAnonymously().then(cred => {
+                db.ref('users/' + cred.user.uid).set({
+                    phone: currentPhone,
+                    approved: true,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    toast('Aprovado!', 'Bem-vindo', 'success');
+                    showDashboard();
+                });
             });
         }
 
-        // Abrir Projeto
-        function openProject(url) {
+        // ABRIR APPS
+        function openApp(folder) {
+            // Substitua pelo seu usuário GitHub real
+            const githubUser = 'fatahanacleto';
+            const url = `https://${githubUser}.github.io/web_IM/${folder}/`;
             window.open(url, '_blank');
         }
 
-        // Atualizar Estatísticas
-        function updateStats() {
-            database.ref('users').once('value', (snapshot) => {
-                const count = snapshot.numChildren();
-                document.getElementById('statUsers').textContent = count;
-                document.getElementById('adminTotalUsers').textContent = count;
-            });
-
-            database.ref('pendingRequests').orderByChild('status').equalTo('pending').once('value', (snapshot) => {
-                const count = snapshot.numChildren();
-                document.getElementById('adminPending').textContent = count;
-            });
-        }
-
-        // Adicionar Botão Admin
-        function addAdminButton() {
+        // ADMIN
+        function addAdminBtn() {
             const header = document.querySelector('header .max-w-7xl');
-            const adminBtn = document.createElement('button');
-            adminBtn.className = 'px-4 py-2 bg-islam-gold text-islam-dark rounded-lg font-semibold hover:bg-yellow-400 transition-all ml-4';
-            adminBtn.innerHTML = '<i class="fas fa-shield-alt mr-2"></i>Admin';
-            adminBtn.onclick = showAdminPanel;
-            header.appendChild(adminBtn);
+            const btn = document.createElement('button');
+            btn.className = 'px-3 py-2 bg-yellow-400 text-green-900 rounded-lg font-bold text-sm ml-2';
+            btn.innerHTML = 'ADMIN';
+            btn.onclick = showAdmin;
+            header.appendChild(btn);
         }
 
-        // Mostrar Painel Admin
-        function showAdminPanel() {
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            loadPendingRequests();
-        }
-
-        // Carregar Solicitações Pendentes
-        function loadPendingRequests() {
-            const container = document.getElementById('pendingRequests');
-            database.ref('pendingRequests').orderByChild('status').equalTo('pending').on('value', (snapshot) => {
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhuma solicitação pendente</p>';
+        function loadPending() {
+            db.ref('pendingRequests').orderByChild('status').equalTo('pending').on('value', snap => {
+                const list = document.getElementById('pendingList');
+                if (!snap.exists()) {
+                    list.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhum pendente</p>';
                     return;
                 }
-
                 let html = '';
-                snapshot.forEach((childSnapshot) => {
-                    const data = childSnapshot.val();
-                    const id = childSnapshot.key;
-                    const date = new Date(data.timestamp).toLocaleString('pt-PT');
-                    
+                snap.forEach(child => {
+                    const data = child.val();
                     html += `
-                        <div class="bg-gray-700/50 rounded-xl p-4 flex items-center justify-between">
+                        <div class="bg-gray-700/50 rounded-xl p-4 flex justify-between items-center">
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <i class="fas fa-phone text-islam-gold"></i>
-                                    <span class="font-semibold">${data.phone}</span>
-                                </div>
-                                <div class="text-xs text-gray-400">
-                                    <i class="far fa-clock mr-1"></i>${date}
-                                </div>
+                                <div class="font-semibold">${data.phone}</div>
+                                <div class="text-xs text-gray-400">${new Date(data.timestamp).toLocaleString()}</div>
                             </div>
                             <div class="flex gap-2">
-                                <button onclick="approveUser('${id}', '${data.phone}')" 
-                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-all text-sm">
-                                    <i class="fas fa-check mr-1"></i>Aprovar
-                                </button>
-                                <button onclick="rejectUser('${id}')" 
-                                    class="px-4 py-2 bg-red-600/50 hover:bg-red-600 rounded-lg transition-all text-sm">
-                                    <i class="fas fa-times mr-1"></i>Rejeitar
-                                </button>
+                                <button onclick="approve('${child.key}', '${data.phone}')" class="px-3 py-2 bg-green-600 rounded-lg text-sm">Aprovar</button>
+                                <button onclick="reject('${child.key}')" class="px-3 py-2 bg-red-600/50 rounded-lg text-sm">Rejeitar</button>
                             </div>
                         </div>
                     `;
                 });
-                container.innerHTML = html;
+                list.innerHTML = html;
             });
         }
 
-        // Aprovar Usuário
-        function approveUser(requestId, phone) {
-            database.ref('pendingRequests/' + requestId).update({
+        function approve(id, phone) {
+            db.ref('pendingRequests/' + id).update({
                 status: 'approved',
                 approvedAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                showToast('Aprovado!', `Usuário ${phone} aprovado com sucesso`, 'success');
-                updateStats();
+            });
+            toast('Aprovado', phone, 'success');
+            updateStats();
+        }
+
+        function reject(id) {
+            db.ref('pendingRequests/' + id).update({
+                status: 'rejected',
+                rejectedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+            toast('Rejeitado', '', 'info');
+        }
+
+        function updateStats() {
+            db.ref('users').once('value', s => document.getElementById('statTotal').textContent = s.numChildren());
+            db.ref('pendingRequests').orderByChild('status').equalTo('pending').once('value', s => {
+                document.getElementById('statPending').textContent = s.numChildren();
             });
         }
 
-        // Rejeitar Usuário
-        function rejectUser(requestId) {
-            if (confirm('Tem certeza que deseja rejeitar esta solicitação?')) {
-                database.ref('pendingRequests/' + requestId).update({
-                    status: 'rejected',
-                    rejectedAt: firebase.database.ServerValue.TIMESTAMP
-                }).then(() => {
-                    showToast('Rejeitado', 'Solicitação rejeitada', 'info');
-                    updateStats();
-                });
-            }
+        function logout() {
+            auth.signOut();
+            if (checkInterval) clearInterval(checkInterval);
         }
 
-        // Exportar Usuários
-        function exportUsers() {
-            database.ref('users').once('value', (snapshot) => {
-                const users = [];
-                snapshot.forEach((child) => {
-                    users.push(child.val());
-                });
-                
-                const dataStr = JSON.stringify(users, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'users-islam-mocambique.json';
-                link.click();
-                
-                showToast('Exportado!', 'Lista de utilizadores baixada', 'success');
-            });
-        }
-
-        // Limpar Pendentes
-        function clearAllPending() {
-            if (confirm('Tem certeza? Esta ação não pode ser desfeita.')) {
-                database.ref('pendingRequests').orderByChild('status').equalTo('pending').once('value', (snapshot) => {
-                    const updates = {};
-                    snapshot.forEach((child) => {
-                        updates[child.key + '/status'] = 'rejected';
-                        updates[child.key + '/rejectedAt'] = firebase.database.ServerValue.TIMESTAMP;
-                    });
-                    database.ref('pendingRequests').update(updates);
-                    showToast('Limpo!', 'Todas as solicitações pendentes foram rejeitadas', 'info');
-                });
-            }
-        }
-
-        // Sistema de Toast Notifications
-        function showToast(title, message, type = 'info') {
-            const toast = document.getElementById('toast');
-            const iconDiv = document.getElementById('toastIcon');
-            const titleEl = document.getElementById('toastTitle');
-            const messageEl = document.getElementById('toastMessage');
-
-            const icons = {
-                success: '<i class="fas fa-check text-green-400"></i>',
-                error: '<i class="fas fa-exclamation text-red-400"></i>',
-                info: '<i class="fas fa-info text-blue-400"></i>',
-                warning: '<i class="fas fa-exclamation-triangle text-yellow-400"></i>'
-            };
-
-            const colors = {
-                success: 'bg-green-500/20',
-                error: 'bg-red-500/20',
-                info: 'bg-blue-500/20',
-                warning: 'bg-yellow-500/20'
-            };
-
-            iconDiv.className = `w-10 h-10 rounded-full flex items-center justify-center ${colors[type]}`;
-            iconDiv.innerHTML = icons[type];
-            titleEl.textContent = title;
-            messageEl.textContent = message;
-
-            toast.classList.remove('hidden');
+        // TOAST
+        function toast(title, msg, type) {
+            const t = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const colors = { success: 'bg-green-500/20', error: 'bg-red-500/20', info: 'bg-blue-500/20' };
+            const icons = { success: '<i class="fas fa-check text-green-400"></i>', error: '<i class="fas fa-exclamation text-red-400"></i>', info: '<i class="fas fa-info text-blue-400"></i>' };
             
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 5000);
+            icon.className = `w-10 h-10 rounded-full flex items-center justify-center ${colors[type]}`;
+            icon.innerHTML = icons[type];
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = msg;
+            
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 4000);
         }
 
-        // Atalho para Admin (Ctrl + Shift + A)
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                e.preventDefault();
-                const password = prompt('Insira a senha de administrador:');
-                if (password === 'admin123') { // Altere esta senha!
-                    isAdmin = true;
-                    showAdminPanel();
-                }
+        // ATALHO ADMIN: clique 5x no logo
+        let clickCount = 0;
+        document.querySelector('.fa-moon').parentElement.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                const pass = prompt('Senha admin:');
+                if (pass === 'islam2024') showAdmin();
+                clickCount = 0;
             }
         });
     </script>

@@ -3,138 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islam Moçambique - Painel de Publicidade</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Islam Moçambique - Comunicados</title>
     <style>
-        :root {
-            --primary: #004d26;
-            --gold: #c5a021;
-            --light: #f9f9f9;
+        :root { --primary: #004d26; --gold: #c5a021; }
+        body { 
+            margin: 0; font-family: 'Segoe UI', sans-serif; 
+            background: #f4f4f4; display: flex; flex-direction: column; align-items: center; 
         }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--light);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        header { 
+            width: 100%; background: var(--primary); color: white; 
+            padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); 
         }
-
-        header {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            border-bottom: 4px solid var(--gold);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .texto-container {
+            margin-top: 50px; width: 85%; max-width: 600px;
+            background: white; padding: 30px; border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            line-height: 1.6; font-size: 1.2rem; color: #333;
+            text-align: center; white-space: pre-wrap; /* Mantém as quebras de linha */
         }
-
-        /* Contentor do Anúncio */
-        #ads-display {
-            margin-top: 30px;
-            width: 90%;
-            max-width: 800px;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            text-align: center;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ad-media {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .ad-media:hover {
-            transform: scale(1.02);
-        }
-
-        .btn-cta {
-            margin-top: 15px;
-            display: inline-block;
-            background: #25d366;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .loading-text {
-            color: #888;
-            font-style: italic;
-        }
+        .data-atualizacao { font-size: 0.8rem; color: #888; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Islam Moçambique</h1>
-        <p>Sistema Central de Publicidade</p>
+        <p>Painel de Informações</p>
     </header>
 
-    <div id="ads-display">
-        <div id="loader" class="loading-text">A carregar publicidade atualizada...</div>
-        <div id="ad-content" style="display: none;">
-            </div>
+    <div class="texto-container" id="conteudo-texto">
+        Carregando informações...
     </div>
 
     <script>
-        // O seu link do Google Drive em formato CSV
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/1kfs1IGAXZq6gJKyqIKuN5NqAA7BhpAVs/export?format=csv";
+        // O seu link formatado para extrair o texto da planilha
+        const URL_PLANILHA = "https://docs.google.com/spreadsheets/d/1kfs1IGAXZq6gJKyqIKuN5NqAA7BhpAVs/export?format=csv";
 
-        async function fetchAds() {
+        async function carregarTexto() {
             try {
-                const response = await fetch(CSV_URL);
-                const data = await response.text();
+                const resposta = await fetch(URL_PLANILHA);
+                const csv = await resposta.text();
                 
-                // Divide por linhas e pega a segunda linha (index 1)
-                const rows = data.split('\n');
-                if (rows.length < 2) return;
+                // O CSV separa por vírgulas. 
+                // Se o seu texto estiver apenas na primeira célula (A1), usamos:
+                const linhas = csv.split('\n');
+                const textoPrincipal = linhas[0]; // Lê a primeira linha da planilha
 
-                const columns = rows[1].split(',');
-                const tipo = columns[0].trim().toLowerCase(); // 'imagem' ou 'video'
-                const linkMidia = columns[1].trim();          // Link do Dropbox com ?raw=1
-                const linkClique = columns[2].trim();         // Link do WhatsApp ou Site
-
-                const loader = document.getElementById('loader');
-                const content = document.getElementById('ad-content');
-
-                let htmlContent = `<a href="${linkClique}" target="_blank">`;
-
-                if (tipo === 'video') {
-                    htmlContent += `<video class="ad-media" autoplay muted loop style="height:300px;">
-                                      <source src="${linkMidia}" type="video/mp4">
-                                    </video>`;
-                } else {
-                    htmlContent += `<img src="${linkMidia}" class="ad-media" style="height:300px; object-fit: contain;">`;
-                }
-
-                htmlContent += `</a><br><a href="${linkClique}" class="btn-cta" target="_blank">Saber Mais</a>`;
-
-                loader.style.display = 'none';
-                content.innerHTML = htmlContent;
-                content.style.display = 'block';
-
-            } catch (error) {
-                console.error("Erro ao ler a planilha:", error);
-                document.getElementById('loader').innerText = "Publicidade temporariamente indisponível.";
+                document.getElementById('conteudo-texto').innerHTML = `
+                    <div>${textoPrincipal}</div>
+                    <div class="data-atualizacao">Atualizado via Nuvem</div>
+                `;
+            } catch (erro) {
+                document.getElementById('conteudo-texto').innerText = "Erro ao carregar o ficheiro de texto.";
             }
         }
 
-        // Executa a função ao carregar a página
-        fetchAds();
+        carregarTexto();
     </script>
 
 </body>

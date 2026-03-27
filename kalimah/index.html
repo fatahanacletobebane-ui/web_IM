@@ -3,63 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islam Moçambique - Comunicados</title>
+    <title>Islam Moçambique - Visualizador PDF</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #004d26; --gold: #c5a021; }
-        body { 
-            margin: 0; font-family: 'Segoe UI', sans-serif; 
-            background: #f4f4f4; display: flex; flex-direction: column; align-items: center; 
+        :root {
+            --primary: #004d26;
+            --gold: #c5a021;
+            --light: #f9f9f9;
         }
-        header { 
-            width: 100%; background: var(--primary); color: white; 
-            padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); 
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: #525659; /* Cor padrão de fundo de leitores de PDF */
         }
-        .texto-container {
-            margin-top: 50px; width: 85%; max-width: 600px;
-            background: white; padding: 30px; border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            line-height: 1.6; font-size: 1.2rem; color: #333;
-            text-align: center; white-space: pre-wrap; /* Mantém as quebras de linha */
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--gold);
+            z-index: 10;
         }
-        .data-atualizacao { font-size: 0.8rem; color: #888; margin-top: 20px; }
+
+        .content-area {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Iframe para exibir o PDF do Drive */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        h2 { margin: 0; font-size: 1.2rem; }
+        small { color: #ccc; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Islam Moçambique</h1>
-        <p>Painel de Informações</p>
+        <div>
+            <h2>Islam Moçambique</h2>
+            <small>Biblioteca Digital</small>
+        </div>
+        <a href="https://wa.me/258860407269" class="btn-whatsapp" target="_blank">
+            <i class="fab fa-whatsapp"></i> Suporte
+        </a>
     </header>
 
-    <div class="texto-container" id="conteudo-texto">
-        Carregando informações...
-    </div>
-
-    <script>
-        // O seu link formatado para extrair o texto da planilha
-        const URL_PLANILHA = "https://docs.google.com/spreadsheets/d/1kfs1IGAXZq6gJKyqIKuN5NqAA7BhpAVs/export?format=csv";
-
-        async function carregarTexto() {
-            try {
-                const resposta = await fetch(URL_PLANILHA);
-                const csv = await resposta.text();
-                
-                // O CSV separa por vírgulas. 
-                // Se o seu texto estiver apenas na primeira célula (A1), usamos:
-                const linhas = csv.split('\n');
-                const textoPrincipal = linhas[0]; // Lê a primeira linha da planilha
-
-                document.getElementById('conteudo-texto').innerHTML = `
-                    <div>${textoPrincipal}</div>
-                    <div class="data-atualizacao">Atualizado via Nuvem</div>
-                `;
-            } catch (erro) {
-                document.getElementById('conteudo-texto').innerText = "Erro ao carregar o ficheiro de texto.";
-            }
-        }
-
-        carregarTexto();
-    </script>
+    <main class="content-area">
+        <iframe src="https://drive.google.com/file/d/1kfs1IGAXZq6gJKyqIKuN5NqAA7BhpAVs/preview" allow="autoplay"></iframe>
+    </main>
 
 </body>
 </html>

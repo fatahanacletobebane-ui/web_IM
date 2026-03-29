@@ -3,215 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guia Islam - Novo Muçulmano</title>
-
+<title>App Islâmica para Novos Muçulmanos</title>
 <style>
-:root {
-    --primary: #1a5f4a;
-    --bg: #f5f5f5;
-    --card: #fff;
-    --text: #333;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #121212;
-        --card: #1e1e1e;
-        --text: #eee;
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
     }
-}
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-}
-
-header {
-    background: var(--primary);
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-}
-
-.card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-}
-
-h2, h3 {
-    color: var(--primary);
-}
-
-.arabic {
-    direction: rtl;
-    text-align: right;
-    font-size: 22px;
-}
-
-/* BOTÃO */
-button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-/* CHECKLIST */
-.checklist li {
-    background: #ddd;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-
-.checklist li.checked {
-    background: #4caf50;
-    color: white;
-}
-
-/* PROGRESSO */
-.progress {
-    height: 10px;
-    background: #ccc;
-    border-radius: 10px;
-    margin-top: 10px;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background: #1a5f4a;
-    border-radius: 10px;
-}
-
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 15px;
-    background: var(--primary);
-    color: white;
-}
+    header {
+        background-color: #2e7d32;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+    h1, h2 {
+        margin-top: 0;
+    }
+    section {
+        padding: 20px;
+        border-bottom: 1px solid #ddd;
+    }
+    .step {
+        background-color: #e8f5e9;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    .step h3 {
+        margin-top: 0;
+    }
+    ul {
+        padding-left: 20px;
+    }
+    .audio-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: #2e7d32;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .audio-btn:hover {
+        background-color: #1b5e20;
+    }
+    .checklist-item {
+        margin: 10px 0;
+    }
 </style>
-
 </head>
 <body>
 
 <header>
-    <h1>Islam Moçambique</h1>
-    <p>Guia Essencial para Novo Muçulmano</p>
+    <h1>Bem-vindo ao Islam – Guia para Novos Muçulmanos</h1>
 </header>
 
-<div class="container">
-
-    <!-- SHAHADA -->
-    <div class="card">
-        <h3>🕌 Shahada</h3>
-
-        <p class="arabic">
-            أشهد أن لا إله إلا الله وأشهد أن محمدًا رسول الله
-        </p>
-
-        <p><strong>Pronúncia:</strong><br>
-        Ash-hadu an la ilaha illallah wa ash-hadu anna Muhammadan Rasulullah</p>
-
-        <button onclick="playAudio()">🔊 Ouvir Shahada</button>
-
-        <audio id="audio">
-            <source src="https://upload.wikimedia.org/wikipedia/commons/3/37/Islamic_shahada.wav">
-        </audio>
+<section id="shahada">
+    <h2>1. Shahada (Declaração de Fé)</h2>
+    <p>A Shahada é a frase que declara a fé islâmica. Um novo muçulmano a recita para afirmar sua crença em Allah e no profeta Muhammad ﷺ.</p>
+    <div class="step">
+        <h3>Como recitar:</h3>
+        <p><strong>Em árabe:</strong> Ash-hadu an la ilaha illa Allah, wa ash-hadu anna Muhammad rasul Allah</p>
+        <p><strong>Em português:</strong> Testemunho que não há divindade além de Allah, e testemunho que Muhammad é o mensageiro de Allah.</p>
+        <p>Diga com sinceridade e compreenda o significado.</p>
+        <button class="audio-btn" onclick="document.getElementById('shahada-audio').play()">Ouvir Pronúncia</button>
+        <audio id="shahada-audio" src="shahada.mp3"></audio>
     </div>
+</section>
 
-    <!-- WUDU -->
-    <div class="card">
-        <h3>🚿 Wudu</h3>
+<section id="wudu">
+    <h2>2. Wudu (Ablução)</h2>
+    <p>O Wudu é a purificação do corpo antes da oração. Aqui está o passo a passo simples:</p>
+    <div class="step">
+        <h3>Passos:</h3>
         <ol>
-            <li>Mãos</li>
-            <li>Boca</li>
-            <li>Nariz</li>
-            <li>Rosto</li>
-            <li>Braços</li>
-            <li>Cabeça</li>
-            <li>Orelhas</li>
-            <li>Pés</li>
+            <li>Lave as mãos até os punhos 3 vezes.</li>
+            <li>Bocheche e limpe o nariz 3 vezes.</li>
+            <li>Lave o rosto 3 vezes.</li>
+            <li>Lave os braços até os cotovelos 3 vezes.</li>
+            <li>Passe água na cabeça 1 vez.</li>
+            <li>Lave os pés até os tornozelos 3 vezes.</li>
         </ol>
+        <p><em>Dica:</em> Faça com atenção e intenção de se purificar.</p>
     </div>
+</section>
 
-    <!-- ORAÇÃO -->
-    <div class="card">
-        <h3>🕋 Orações</h3>
+<section id="salah">
+    <h2>3. Oração (Salah) para Iniciantes</h2>
+    <p>Um novo muçulmano pode começar com orações simples. Aqui está um guia inicial:</p>
+    <div class="step">
+        <h3>Quantas vezes orar:</h3>
         <ul>
-            <li>Fajr</li>
-            <li>Dhuhr</li>
-            <li>Asr</li>
-            <li>Maghrib</li>
-            <li>Isha</li>
+            <li>Fajr – ao amanhecer (2 unidades)</li>
+            <li>Dhuhr – meio-dia (4 unidades)</li>
+            <li>Asr – fim da tarde (4 unidades)</li>
+            <li>Maghrib – pôr do sol (3 unidades)</li>
+            <li>Isha – noite (4 unidades)</li>
         </ul>
+        <h3>Posições básicas:</h3>
+        <ol>
+            <li>Ficar de pé e fazer a intenção (Niyyah)</li>
+            <li>Inclinar (Ruku')</li>
+            <li>Prosternar (Sujood)</li>
+            <li>Sentar brevemente e repetir Sujood</li>
+            <li>Levantar-se para a próxima unidade</li>
+        </ol>
+        <p><em>Dica:</em> No início, concentre-se na intenção e em aprender as posições. Com o tempo, você poderá memorizar as palavras.</p>
     </div>
+</section>
 
-    <!-- AL-FATIHA -->
-    <div class="card">
-        <h3>📖 Al-Fatiha</h3>
-
-        <p class="arabic">
-            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ<br>
-            الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ<br>
-            الرَّحْمَٰنِ الرَّحِيمِ<br>
-            مَالِكِ يَوْمِ الدِّينِ<br>
-            إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ<br>
-            اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ
-        </p>
+<section id="checklist">
+    <h2>4. Checklist Diário para Novos Muçulmanos</h2>
+    <div class="step checklist-item">
+        <p>✔ Aprender e recitar Shahada com significado.</p>
     </div>
-
-    <!-- CHECKLIST -->
-    <div class="card">
-        <h3>✅ Progresso</h3>
-
-        <ul class="checklist" id="list">
-            <li onclick="check(this)">Aprendi Shahada</li>
-            <li onclick="check(this)">Aprendi Wudu</li>
-            <li onclick="check(this)">Aprendi Al-Fatiha</li>
-            <li onclick="check(this)">Comecei a rezar</li>
-        </ul>
-
-        <div class="progress">
-            <div class="progress-bar" id="bar"></div>
-        </div>
+    <div class="step checklist-item">
+        <p>✔ Fazer Wudu corretamente antes das orações.</p>
     </div>
-
-</div>
-
-<footer>
-    <p>Contacto: 860407269</p>
-</footer>
-
-<script>
-function playAudio(){
-    document.getElementById("audio").play();
-}
-
-function check(el){
-    el.classList.toggle("checked");
-
-    let items = document.querySelectorAll("#list li");
-    let done = document.querySelectorAll("#list li.checked");
-
-    let percent = (done.length / items.length) * 100;
-    document.getElementById("bar").style.width = percent + "%";
-}
-</script>
+    <div class="step checklist-item">
+        <p>✔ Praticar pelo menos uma oração curta diariamente.</p>
+    </div>
+    <div class="step checklist-item">
+        <p>✔ Conhecer os 5 pilares do Islam e seu significado.</p>
+    </div>
+    <div class="step checklist-item">
+        <p>✔ Dizer uma Du’a simples diária (como agradecimento a Allah).</p>
+    </div>
+</section>
 
 </body>
 </html>
